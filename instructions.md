@@ -27,3 +27,4 @@ Once you have a decent working version you are happy with move onto these delive
 1. A test suite built using `pytest` to help maintain the code
 2. Suitable docstrings to explain how the code works
 3. A final code review and pull request to main to create v1.0
+edit

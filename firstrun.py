@@ -80,7 +80,6 @@ print(np.average(image))
 plt.imshow(image, cmap = 'gray')
 plt.savefig("speckle_image.tiff") # just saving it as only a .tiff cause idk how to make it a bitmap
 
-plt.show()
 
 #now i need to output a fast fourier transform of the average speckle size? obv the minimum speckle size is just whatever the user inputs but when the speckles join together/overlap so the main is kinda alot. 
 fft = np.fft.fft2(image)
@@ -88,7 +87,40 @@ fft_shifted = np.fft.fftshift(fft) # moves 0 frequency bit to the centre - easie
 magnitude = np.abs(fft_shifted)
 
 #display the fft
+plt.figure()
 plt.imshow(np.log(magnitude+1), cmap = 'gray')
 plt.title("FFT Magnitude")
 plt.savefig("fft.tiff")
+
+
+#editing this in the new branch dev now!
+#to find average speckle size, need to find the dominant frequency as the speckle size is 1 over the dominant frequency, need to find that then i can find my average speckle size. 
+
+# first step is to compute the FFT power spectrum
+power = np.abs(fft_shifted)**2
+#next need to calculate the radial distance from the centre
+rows, cols = power.shape
+cy = rows // 2
+cx = cols // 2
+
+y, x = np.indices((rows, cols))
+
+r = np.sqrt((x-cx)**2 + (y+cy)**2)
+r = r.astype(int) #need to know what this FFT value is??
+#now every FFT pixel has a radius from the centre
+counts = np.bincount(r.ravel())
+sums = np.bincount(r.ravel(), weights = power.ravel())
+radial_profile = sums / np.maximum (counts, 1)
+plt.figure()
+plt.plot(radial_profile)
+plt.xlabel("radius")
+plt.ylabel("Average FFT power")
+
+
+peak_idx = np.argmax(radial_profile[1:])+1
+
+
+dominant_frequency = peak_idx/imagewidth
+average_speckle_size = 1/dominant_frequency
+print("estimated speckle size:", average_speckle_size, "pixels")
 plt.show()

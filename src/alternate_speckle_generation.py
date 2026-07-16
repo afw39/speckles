@@ -16,7 +16,8 @@ def inputvalues():
         speckleheight= int(input("Enter height of speckles. "))
         speckle_area = specklewidth * speckleheight
         if specklewidth < 3 or speckleheight < 3:
-            print("Speckles must be at least 3 pixels wide and 3 pixels tall. Please try again.")
+            print("Speckles must be at least 3 pixels wide"
+            " and 3 pixels tall. Please try again.")
             speckles = True
         elif speckle_area > 9 and speckleheight > 3 and specklewidth > 3:
             speckles = False
@@ -28,7 +29,7 @@ def inputvalues():
     # using this as the density of speckles?
     bw = True
     while bw == True:
-        bwbalance = float(input("Enter black and white balance (0.0 is white - 1.0 is black). "))
+        bwbalance = float(input("Enter black and white balance (0.0 is black- 1.0 is white). "))
         if bwbalance < 0.0 or bwbalance > 1.0:
             print("Incorrect value. Please enter a value between 0.0 and 1.0.")
             bw = True
@@ -67,7 +68,7 @@ plt.xlim(0, imagewidth)
 plt.ylim(0, imageheight)
 plt.gca().set_aspect('equal')
 
-image = np.ones((imageheight,imagewidth)) #can make two options but cant be bothered (would just change the np.ones to np.zeroes and then when im changing pixel colours would change them to 1 instead of 0 based off of user input.) I would make each one, black on white or white on black background a different function. 
+image = np.full((imageheight,imagewidth), bwbalance)
 
 for i in range(number_of_speckles): #changing each pixel one by one to black from white
     image[
@@ -75,52 +76,6 @@ for i in range(number_of_speckles): #changing each pixel one by one to black fro
         x_rand[i]:x_rand[i] + specklewidth
     ] = 0
 
-
-print(np.average(image))
 plt.imshow(image, cmap = 'gray')
-plt.savefig("speckle_image.tiff") # just saving it as only a .tiff cause idk how to make it a bitmap
-
-
-#now i need to output a fast fourier transform of the average speckle size? obv the minimum speckle size is just whatever the user inputs but when the speckles join together/overlap so the main is kinda alot. 
-fft = np.fft.fft2(image)
-fft_shifted = np.fft.fftshift(fft) # moves 0 frequency bit to the centre - easier to read
-magnitude = np.abs(fft_shifted)
-
-#display the fft
-plt.figure()
-plt.imshow(np.log(magnitude+1), cmap = 'gray')
-plt.title("FFT Magnitude")
-plt.savefig("fft.tiff")
-
-
-#editing this in the new branch dev now!
-#to find average speckle size, need to find the dominant frequency as the speckle size is 1 over the dominant frequency, need to find that then i can find my average speckle size. 
-
-# first step is to compute the FFT power spectrum
-power = np.abs(fft_shifted)**2
-#next need to calculate the radial distance from the centre
-rows, cols = power.shape
-cy = rows // 2
-cx = cols // 2
-
-y, x = np.indices((rows, cols))
-
-r = np.sqrt((x-cx)**2 + (y+cy)**2)
-r = r.astype(int) #need to know what this FFT value is??
-#now every FFT pixel has a radius from the centre
-counts = np.bincount(r.ravel())
-sums = np.bincount(r.ravel(), weights = power.ravel())
-radial_profile = sums / np.maximum (counts, 1)
-plt.figure()
-plt.plot(radial_profile)
-plt.xlabel("radius")
-plt.ylabel("Average FFT power")
-
-
-peak_idx = np.argmax(radial_profile[1:])+1
-
-
-dominant_frequency = peak_idx/imagewidth
-average_speckle_size = 1/dominant_frequency
-print("estimated speckle size:", average_speckle_size, "pixels")
+plt.savefig("speckle_image.tiff") 
 plt.show()

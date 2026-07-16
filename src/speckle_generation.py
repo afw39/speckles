@@ -2,6 +2,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import ndimage
+from scipy import fft
+from scipy.fft import fft2, fftshift, ifft2
+from scipy.signal import peak_widths
 
 
 #functions
@@ -32,14 +35,8 @@ def userinputs():
 
     return imagewidth, imageheight, speckle_height, speckle_width, specklespacing, blackwhite
 
-#lets calculate our grid size
-def gridsize(imagewidth, specklespacing, imageheight):
-    #so need to generate a point at regular intervals of x_diff and at y_diff
-    x_coords = np.arange(0, imagewidth, specklespacing) # i think this is making an array between 0 and the width with intervals of specklespacing?
-    y_coords = np.arange(0, imageheight, specklespacing) #same for y
-    return x_coords, y_coords
 
-#need to work out how many speckles i have so i know how many coordinates/points i need to generate
+#finding out how many speckles i have
 def speckle_num(imagewidth, specklespacing, imageheight):
     x_speckles = imagewidth /specklespacing
     y_speckles = imageheight / specklespacing
@@ -54,7 +51,7 @@ def coordinate_generation():
 
     #generating random displacements
     x_disp = np.random.randint(
-        (-1 * specklespacing // 2),
+        (-1 * specklespacing // 2) + 1,
         (specklespacing //2) + 1,
         size = X.shape)
 
@@ -80,43 +77,47 @@ def imagegeneration():
             x:x+speckle_width] = 0 
     return image
 
-def fftanalysis():
-    fft = np.fft.fft2(image)
-    fft_shifted = np.fft.fftshift(fft) # moves 0 frequency bit to the centre - easier to read
-    magnitude = np.abs(fft_shifted)
-
-    power = np.abs(fft_shifted)**2
-    #next need to calculate the radial distance from the centre
-    rows, cols = power.shape
-    cy = rows // 2
-    cx = cols // 2
-
-    y, x = np.indices((rows, cols))
-
-    r = np.sqrt((x-cx)**2 + (y-cy)**2) #equation for centre cx,cy
-    r = r.astype(int)
-    #now every FFT pixel has a radius from the centre
-    counts = np.bincount(r.ravel())
-    sums = np.bincount(r.ravel(), weights = power.ravel())
-    radial_profile = sums / np.maximum (counts, 1)
-
-    labels, num_features = ndimage.label(image == 0)
-    areas = ndimage.sum(
-        image == 0,
-        labels,
-        range(1, num_features + 1))
-    print("Using FFT analysis, average speckle size is ",np.mean(areas))
-    plt.show()
-
-
 #main code
 imagewidth, imageheight, speckle_height, speckle_width, specklespacing, blackwhite = userinputs()
 speckle_size = speckle_height * speckle_width
 imagesize = imagewidth * imageheight
-x_coords, y_coords = gridsize(imagewidth, specklespacing, imageheight)
 number_of_speckles = speckle_num(imagewidth, specklespacing, imageheight)
 X_new, Y_new = coordinate_generation()
 image = imagegeneration()
 plt.imshow(image, cmap = 'gray', vmin = 0, vmax = 1)
 plt.savefig('new_speckle_pattern.tiff')
-fftanalysis()
+
+
+
+def average_speckle_size(image):
+    F = fft2(image - np.mean(image))
+    autocorr = fftshift(np.real(ifft2(np.abs(F)**2)))
+    autocorr /= autocorr.max()
+
+    #autocorr = autocorrelation(image)
+    centre_y = autocorr.shape[0] // 2
+    profile = autocorr[centre_y, :]
+    centre = len(profile) // 2
+    print(profile[centre])
+    widths,_,_, _ = peak_widths(
+        profile,
+        [centre],
+        rel_height=0.5
+    )
+    return widths[0]
+
+size =  speckle_width* average_speckle_size(image)
+print(f"Average speckle size = {size:.2f} pixels")
+
+plt.show()
+
+#working code to get average speckle size however not fft:
+#def average_speckle_size():
+    #labels, num_features = ndimage.label(image == 0)
+    #areas = ndimage.sum(
+        #image == 0,
+        #labels,
+        #range(1, num_features + 1))
+    #print("Using FFT analysis, average speckle size is ",np.mean(areas))
+    #plt.show()
+

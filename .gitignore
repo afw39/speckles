@@ -1,3 +1,4 @@
 venv/
 *.tiff
 __pycache__/
+.venv/

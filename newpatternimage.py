@@ -3,6 +3,8 @@
 #start with imports again
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy import ndimage
+
 
 #now user inputs - this time im going to ask for speckle separation instead of speckle size, to generate my grid (will be a theoretical point every spacing and that will be displaced.) so the spacing is how i know how many speckles to have
 
@@ -31,25 +33,10 @@ def userinputs():
             print("Please enter a number in the correct range.")
             bwbal = True
 
-    lossless_format = True
-    while lossless_format == True:
-        format = input("Enter the format the image will be stored in: 't' for `.tiff` and 'b' for `bitmap`: ")
-        if format != 't' and format != 'b':
-            print("Please enter a valid format. ")
-            lossless_format = True
-        else:
-            lossless_format = False
-
-    return imagewidth, imageheight, speckle_height, speckle_width, specklespacing, blackwhite, format
+    return imagewidth, imageheight, speckle_height, speckle_width, specklespacing, blackwhite
 
 #running this first to get the inputs
-imagewidth, imageheight, speckle_height, speckle_width, specklespacing, blackwhite, format = userinputs()
-
-#gonna quick make an if statment to deal with the format variable, then will move on to calculating the grid size:
-if format == 't':
-    saving = '.tiff'
-else:
-    saving = '.bmp'
+imagewidth, imageheight, speckle_height, speckle_width, specklespacing, blackwhite = userinputs()
 
 #apparently matplotlib doesnt like bitmaps so we'll see if we end up needing this at all
 speckle_size = speckle_height * speckle_width
@@ -108,6 +95,62 @@ for x, y in zip(X_new.ravel(), Y_new.ravel()):
         x:x+speckle_width] = 0 #this is drawing each speckle in black, so to do the greyscale thing will change the np.zeroes thing.
 
 #then display
-plt.imshow(image, cmap = 'gray')
+plt.imshow(image, cmap = 'gray', vmin = 0, vmax = 1)
 plt.savefig('new_speckle_pattern.tiff')
+
+#okay now i need to do a fast fourier transform analysis for my average speckle size
+fft = np.fft.fft2(image)
+fft_shifted = np.fft.fftshift(fft) # moves 0 frequency bit to the centre - easier to read
+magnitude = np.abs(fft_shifted)
+
+#display the fft
+plt.figure()
+plt.imshow(np.log(magnitude+1), cmap = 'gray')
+plt.title("FFT Magnitude")
+plt.savefig("fft.tiff")
+
+
+power = np.abs(fft_shifted)**2
+#next need to calculate the radial distance from the centre
+rows, cols = power.shape
+cy = rows // 2
+cx = cols // 2
+
+y, x = np.indices((rows, cols))
+
+r = np.sqrt((x-cx)**2 + (y-cy)**2)
+r = r.astype(int) #need to know what this FFT value is??
+#now every FFT pixel has a radius from the centre
+counts = np.bincount(r.ravel())
+sums = np.bincount(r.ravel(), weights = power.ravel())
+radial_profile = sums / np.maximum (counts, 1)
+plt.figure()
+plt.plot(radial_profile)
+plt.xlim(0,50)
+plt.xlabel("radius")
+plt.ylabel("Average FFT power")
+
+
+labels, num_features = ndimage.label(image == 0)
+
+
+areas = ndimage.sum(
+    image == 0,
+    labels,
+    range(1, num_features + 1)
+)
+
+print(np.mean(areas))
+
+
+peak_idx = np.argmax(radial_profile[1:])+1
+
+
+dominant_frequency = peak_idx/imagewidth
+average_speckle_size = 1/dominant_frequency
+print("estimated speckle size:", average_speckle_size, "pixels")
+print("Peak index: ",peak_idx)
+print("Image width:", imagewidth)
+print("Frequency:", dominant_frequency)
+print("Estimated size:", average_speckle_size)
 plt.show()

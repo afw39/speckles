@@ -33,7 +33,7 @@ def userinputs():
     return imagewidth, imageheight, speckle_height, speckle_width, specklespacing, blackwhite
 
 
-#need to work out how many speckles i have so i know how many coordinates/points i need to generate
+#finding out how many speckles i have
 def speckle_num(imagewidth, specklespacing, imageheight):
     x_speckles = imagewidth /specklespacing
     y_speckles = imageheight / specklespacing
@@ -75,24 +75,19 @@ def imagegeneration():
     return image
 
 def fftanalysis():
-    fft = np.fft.fft2(image)
-    fft_shifted = np.fft.fftshift(fft) # moves 0 frequency bit to the centre - easier to read
-    magnitude = np.abs(fft_shifted)
+    #fft = np.fft.fft2(image)
+    #fft_shifted = np.fft.fftshift(fft) # moves 0 frequency bit to the centre - easier to read
+    #magnitude = np.abs(fft_shifted)
 
-    power = np.abs(fft_shifted)**2
+    #power = np.abs(fft_shifted)**2
     #next need to calculate the radial distance from the centre
-    rows, cols = power.shape
-    cy = rows // 2
-    cx = cols // 2
-
-    y, x = np.indices((rows, cols))
-
-    r = np.sqrt((x-cx)**2 + (y-cy)**2) #equation for centre cx,cy
-    r = r.astype(int)
+    #rows, cols = power.shape
+    #cy = rows // 2
+    #cx = cols // 2
+    #y, x = np.indices((rows, cols))
+    #r = np.sqrt((x-cx)**2 + (y-cy)**2) #equation for centre cx,cy
+    #r = r.astype(int)
     #now every FFT pixel has a radius from the centre
-    counts = np.bincount(r.ravel())
-    sums = np.bincount(r.ravel(), weights = power.ravel())
-    radial_profile = sums / np.maximum (counts, 1)
 
     labels, num_features = ndimage.label(image == 0)
     areas = ndimage.sum(

@@ -1,0 +1,17 @@
+[project]
+name  = "speckles"
+version = "0.1.0"
+description = "Random speckle generator in python"
+authors = [
+    {name = "afw39", email = "aoife.willis@ukaea.uk"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy",
+    "matplotlib",
+    "scipy"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -32,14 +32,7 @@ def userinputs():
 
     return imagewidth, imageheight, speckle_height, speckle_width, specklespacing, blackwhite
 
-#lets calculate our grid size
-def gridsize(imagewidth, specklespacing, imageheight):
-    #so need to generate a point at regular intervals of x_diff and at y_diff
-    x_coords = np.arange(0, imagewidth, specklespacing) # i think this is making an array between 0 and the width with intervals of specklespacing?
-    y_coords = np.arange(0, imageheight, specklespacing) #same for y
-    return x_coords, y_coords
-
-#need to work out how many speckles i have so i know how many coordinates/points i need to generate
+#working out number of points/speckles
 def speckle_num(imagewidth, specklespacing, imageheight):
     x_speckles = imagewidth /specklespacing
     y_speckles = imageheight / specklespacing
@@ -48,11 +41,11 @@ def speckle_num(imagewidth, specklespacing, imageheight):
 
 #generate my grid now:
 def coordinate_generation():
-    x_coords = np.arange(0, imagewidth, specklespacing)
+    x_coords = np.arange(0, imagewidth, specklespacing) #making points at regular intervals of specklespacing
     y_coords = np.arange(0, imageheight, specklespacing)
     X, Y = np.meshgrid(x_coords, y_coords) #making my grid
 
-    #generating random displacements
+    #generating random displacements for each point, stored in an array
     x_disp = np.random.randint(
         (-1 * specklespacing // 2),
         (specklespacing //2) + 1,
@@ -63,8 +56,8 @@ def coordinate_generation():
         (specklespacing // 2) + 1,
         size = Y.shape)
 
-    #new points
-    X_new = X + x_disp #adding my random displacements to each grid point
+    #new points, adding my random displacements to each grid point
+    X_new = X + x_disp 
     Y_new = Y + y_disp
     return X_new, Y_new
 
@@ -73,43 +66,40 @@ def imagegeneration():
     image = np.full((imageheight, imagewidth), blackwhite)
     #drawing each speckle onto the image
     for x, y in zip(X_new.ravel(), Y_new.ravel()):
-        x = max(0, min(x, imagewidth - speckle_width))
+        x = max(0, min(x, imagewidth - speckle_width)) 
         y = max(0, min(y, imageheight - speckle_height))
         image[
             y:y+speckle_height,
             x:x+speckle_width] = 0 
     return image
 
+#doing fast fourier transform analysis
 def fftanalysis():
     fft = np.fft.fft2(image)
-    fft_shifted = np.fft.fftshift(fft) # moves 0 frequency bit to the centre - easier to read
-    magnitude = np.abs(fft_shifted)
-
+    fft_shifted = np.fft.fftshift(fft) # moves 0 frequency bit to the centre - easier to read visualisation of
+    magnitude = np.abs(fft_shifted) #gives magnitude of FFT
     power = np.abs(fft_shifted)**2
     #next need to calculate the radial distance from the centre
     rows, cols = power.shape
     cy = rows // 2
     cx = cols // 2
-
     y, x = np.indices((rows, cols))
-
     r = np.sqrt((x-cx)**2 + (y-cy)**2) #equation for centre cx,cy
     r = r.astype(int)
     #now every FFT pixel has a radius from the centre
     counts = np.bincount(r.ravel())
     sums = np.bincount(r.ravel(), weights = power.ravel())
     radial_profile = sums / np.maximum (counts, 1)
-
     labels, num_features = ndimage.label(image == 0)
     areas = ndimage.sum(
         image == 0,
         labels,
-        range(1, num_features + 1))
+        range(1, num_features + 1)) # should be the array of speckle sizes
     print("Using FFT analysis, average speckle size is ",np.mean(areas))
     plt.show()
 
 
-#main code
+#main code - running the functions in order and showing the image/saving in a lossless format - tiff
 imagewidth, imageheight, speckle_height, speckle_width, specklespacing, blackwhite = userinputs()
 speckle_size = speckle_height * speckle_width
 imagesize = imagewidth * imageheight

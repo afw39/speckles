@@ -141,4 +141,19 @@ areas = ndimage.sum(
 )
 
 print(np.mean(areas))
+<<<<<<< HEAD
+=======
+
+
+peak_idx = np.argmax(radial_profile[1:])+1
+
+
+dominant_frequency = peak_idx/imagewidth
+average_speckle_size = 1/dominant_frequency
+print("estimated speckle size:", average_speckle_size, "pixels")
+print("Peak index: ",peak_idx)
+print("Image width:", imagewidth)
+print("Frequency:", dominant_frequency)
+print("Estimated size:", average_speckle_size)
+>>>>>>> joel
 plt.show()

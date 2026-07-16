@@ -104,11 +104,10 @@ fft_shifted = np.fft.fftshift(fft) # moves 0 frequency bit to the centre - easie
 magnitude = np.abs(fft_shifted)
 
 #display the fft
-plt.figure()
-plt.imshow(np.log(magnitude+1), cmap = 'gray')
-plt.title("FFT Magnitude")
-plt.savefig("fft.tiff")
-
+#plt.figure()
+#plt.imshow(np.log(magnitude+1), cmap = 'gray')
+#plt.title("FFT Magnitude")
+#plt.savefig("fft.tiff")
 
 power = np.abs(fft_shifted)**2
 #next need to calculate the radial distance from the centre
@@ -124,36 +123,11 @@ r = r.astype(int) #need to know what this FFT value is??
 counts = np.bincount(r.ravel())
 sums = np.bincount(r.ravel(), weights = power.ravel())
 radial_profile = sums / np.maximum (counts, 1)
-plt.figure()
-plt.plot(radial_profile)
-plt.xlim(0,50)
-plt.xlabel("radius")
-plt.ylabel("Average FFT power")
-
 
 labels, num_features = ndimage.label(image == 0)
-
-
 areas = ndimage.sum(
     image == 0,
     labels,
-    range(1, num_features + 1)
-)
-
+    range(1, num_features + 1))
 print(np.mean(areas))
-<<<<<<< HEAD
-=======
-
-
-peak_idx = np.argmax(radial_profile[1:])+1
-
-
-dominant_frequency = peak_idx/imagewidth
-average_speckle_size = 1/dominant_frequency
-print("estimated speckle size:", average_speckle_size, "pixels")
-print("Peak index: ",peak_idx)
-print("Image width:", imagewidth)
-print("Frequency:", dominant_frequency)
-print("Estimated size:", average_speckle_size)
->>>>>>> joel
 plt.show()

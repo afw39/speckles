@@ -1,13 +1,10 @@
-#okay so instead of randomnly changing pixels, i am going to generate a grid based off of the image size and speckle spacing and then randomnly displace each pixel. this might be a job for tomorrow tho. 
-
-#start with imports again
+#imports
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import ndimage
 
 
-#now user inputs - this time im going to ask for speckle separation instead of speckle size, to generate my grid (will be a theoretical point every spacing and that will be displaced.) so the spacing is how i know how many speckles to have
-
+#functions
 def userinputs():
     imageheight = int(input("Enter height of image in pixels: "))
     imagewidth = int(input("Enter width of the image in pixels: "))
@@ -83,7 +80,6 @@ def imagegeneration():
             x:x+speckle_width] = 0 
     return image
 
-
 def fftanalysis():
     fft = np.fft.fft2(image)
     fft_shifted = np.fft.fftshift(fft) # moves 0 frequency bit to the centre - easier to read
@@ -112,6 +108,8 @@ def fftanalysis():
     print("Using FFT analysis, average speckle size is ",np.mean(areas))
     plt.show()
 
+
+#main code
 imagewidth, imageheight, speckle_height, speckle_width, specklespacing, blackwhite = userinputs()
 speckle_size = speckle_height * speckle_width
 imagesize = imagewidth * imageheight

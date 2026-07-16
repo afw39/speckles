@@ -4,7 +4,12 @@
 This is a simple python package for generation of a speckle pattern based on user inputs for variables such as imageheight, imagewidth, speckle size, black and white balance and the speckle spacing. It perfoms fast fourier analysis on the generated speckle pattern and determines the average speckle size and gives a visualisation of the pattern. 
 
 ## How to install
-idk need to find that out
+clone the repository and install package:
+```
+git clone <repository-url>
+cd speckles
+pip install
+```
 
 ## Structure of package
 The package has two source code modules for two different ways of generating random speckles:

@@ -10,12 +10,21 @@ git clone <repository-url>
 cd speckles
 pip install
 ```
+<<<<<<< HEAD
 
 ## Structure of package
 The package has two source code modules for two different ways of generating random speckles:
 * `speckle_generation.py` generates the pattern by plotting a uniform grid of speckles based on the image size and the speckle spacing and displacing each point/speckle by a randomnly generated amount within a range. This allows you to quantify 'how random' the pattern is if you wanted to. There is fourier analysis outputting the average speckle size (different from inputted speckle dimensions as the speckles overlap/connect) of each pattern. 
 * `alternate_speckle_generation.py` generates the speckle pattern by simply creating a white image of the dimensions inputted by the user and then randomnly generating points/speckles and changing those pixels to black. The input for black and white balance is treated as a measure of the 'density of speckles' which is used with the image size and speckle size to calculate how many speckles/points need to be generated. There is no fourier analysis in this module.
 * `circular_speckles.py`
+=======
+need to check this idk if thats right
+
+## Structure of package
+The package has two source code modules for two different ways of generating random speckles:
+* `speckle_generation` generates the pattern by plotting a uniform grid of speckles based on the image size and the speckle spacing and displacing each point/speckle by a randomnly generated amount within a range. This allows you to quantify 'how random' the pattern is if you wanted to. There is fourier analysis outputting the average speckle size (different from inputted speckle dimensions as the speckles overlap/connect) of each pattern. 
+* `alternate_speckle_generation` generates the speckle pattern by simply creating a white image of the dimensions inputted by the user and then randomnly generating points/speckles and changing those pixels to black. The input for black and white balance is treated as a measure of the 'density of speckles' which is used with the image size and speckle size to calculate how many speckles/points need to be generated. There is no fourier analysis in this module. 
+>>>>>>> circles
 
 ```
 .gitignore

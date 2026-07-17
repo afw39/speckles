@@ -5,8 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import ndimage
 from scipy import fft
-from scipy.fft import fft2, fftshift, ifft2
-from scipy.signal import peak_widths
+from scipy.fft import fft, fftfreq
+from scipy.ndimage import gaussian_filter1d
 
 #functions
 def userinputs():
@@ -15,9 +15,9 @@ def userinputs():
 
     specksize = True
     while specksize == True:
-        speckle_size = int(input("Enter the desired speckle size in pixels: "))
-        if speckle_size < 9:
-            print("Speckles must be at least 9 pixels")
+        speckle_radius = int(input("Enter the speckle radius in pixels: "))
+        if speckle_radius < 3:
+            print("Speckles must be at least 3 pixels in radius")
             specksize = True
         else:
             specksize = False
@@ -32,7 +32,11 @@ def userinputs():
             print("Please enter a number in the correct range.")
             bwbal = True
 
+<<<<<<< HEAD
     return imagewidth, imageheight, speckle_size, blackwhite
+=======
+    return imagewidth, imageheight, speckle_radius, blackwhite
+>>>>>>> circles
 
 #instead of getting user input for speckle spacing, see what 'density' of speckles is needed, and then using the image size/speckle siz in pixels can work out how much the speckle spacing is.  Going to write a separate function for this:
 
@@ -41,15 +45,19 @@ def specklespacing():
     number_of_speckles = imagesize * blackwhite / speckle_size
     speckle_spacing = np.sqrt(imagesize / number_of_speckles)
     return speckle_spacing
+<<<<<<< HEAD
 
 #think that will be fine
 
+=======
+>>>>>>> circles
 
 #generating the uniform grid
 def coordinate_generation():
     x_coords = np.arange(0, imagewidth, speckle_spacing)
     y_coords = np.arange(0, imageheight, speckle_spacing)
     X, Y = np.meshgrid(x_coords, y_coords) #making my grid
+    #plt.scatter(X,Y) remove the hash if want to see the original grid
 
     #generating random displacements
     x_disp = np.random.randint(
@@ -67,6 +75,7 @@ def coordinate_generation():
     Y_new = Y + y_disp
     return X_new, Y_new
 
+<<<<<<< HEAD
 #making/plotting points onto my image
 def imagegeneration():
     image = np.full((imageheight, imagewidth), 1) 
@@ -82,9 +91,95 @@ def imagegeneration():
 imagewidth, imageheight, speckle_size, blackwhite = userinputs()
 imagesize = imagewidth * imageheight
 speckle_radius = np.sqrt( speckle_size / np.pi)
+=======
+#new imagegeneration code:
+def imagegeneration():
+    image = np.full((imageheight, imagewidth), 1.0)
+    # splitting each pixel into 16 - 4x4 subpixels
+    samples = 4
+    offsets = (np.arange(samples) + 0.5) / samples - 0.5
+
+    yy, xx = np.meshgrid(
+        np.arange(imageheight),
+        np.arange(imagewidth),
+        indexing = 'ij')
+    for x, y in zip(X_new.ravel(), Y_new.ravel()):
+        coverage = np.zeros_like(image, dtype = float)
+        for dx in offsets:
+            for dy in offsets:
+                dist2 = ((xx+dx)-x)**2 + ((yy+dy)-y)**2
+                coverage += dist2 <= speckle_radius**2
+        coverage /= samples**2
+        #need it to be greyscale proportional to how much pixel is being covered
+        image = np.minimum(image, 1 - coverage)
+    return image
+
+#main code
+imagewidth, imageheight, speckle_radius, blackwhite = userinputs()
+imagesize = imagewidth * imageheight
+speckle_size = np.pi * (speckle_radius**2)
+>>>>>>> circles
 speckle_spacing = specklespacing()
 X_new, Y_new = coordinate_generation()
 image = imagegeneration()
 plt.imshow(image, cmap = 'gray', vmin = 0, vmax = 1)
 plt.savefig('new_speckle_pattern.tiff')
+<<<<<<< HEAD
 plt.show()
+=======
+
+
+#gonna do the fft again but this time going to take two 1D ffts in the x-direcion and in the y-direction and see what happens and then plot them on the same graph. 
+
+x_profile = np.mean(image, axis = 0) #gives 1 value per column
+x_profile = x_profile - np.mean(x_profile)
+x_fft = fft(x_profile)
+#magnitude spectrum
+x_magnitude = np.abs(x_fft)
+
+
+#same for the y direction
+y_profile = np.mean(image, axis = 1)
+y_profile = y_profile - np.mean(y_profile)
+y_fft = fft(y_profile)
+y_magnitude = np.abs(y_fft)
+
+#frequency axis
+freq = fftfreq(len(x_profile), d = 1)
+
+positive = freq > 0
+freq = freq[positive]
+x_magnitude = x_magnitude[positive]
+y_magnitude = y_magnitude[positive]
+#can take an average magnitude as the speckles are circular - no favourtism between x/y
+avg_magnitude = (x_magnitude + y_magnitude) / 2
+
+avg_magnitude = gaussian_filter1d(avg_magnitude, sigma = 3) #smoothing out the signal
+#valid = freq > 0
+peak_index = np.argmax(avg_magnitude)
+peak_frequency = freq[peak_index]
+
+#peak = np.max(avg_magnitude)
+#half_max = peak/2
+
+
+average_speckle_clump_length = 1/peak_frequency
+average_speckle_clump = average_speckle_clump_length / (2*speckle_radius)
+average_speckle_size = average_speckle_clump * speckle_size
+print(f"Estimated average speckle size is {average_speckle_size:.2f} pixels.")
+print(speckle_spacing)
+plt.figure()
+plt.plot(freq, avg_magnitude)
+plt.axvline(
+    peak_frequency,
+    color = 'red',
+    linestyle = '--',
+    )
+
+plt.xlabel("Spatial frequency (cycles/pixel)")
+plt.ylabel("Magnitude")
+plt.savefig("fft_pattern.tiff")
+plt.show()
+
+#pretty happy with this code - no idea if it works or not but oh well!! seems to be giving me correct looking outputs
+>>>>>>> circles

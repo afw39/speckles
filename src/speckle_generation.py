@@ -48,13 +48,13 @@ def coordinate_generation():
 
     #generating random displacements
     x_disp = np.random.randint(
-        (-1 * specklespacing // 2),
-        (specklespacing //2) + 1,
+        (-1 * specklespacing / 2),
+        (specklespacing /2) + 1,
         size = X.shape)
 
     y_disp = np.random.randint(
-        (-1 * specklespacing // 2) + 1,
-        (specklespacing // 2) + 1,
+        (-1 * specklespacing / 2) + 1,
+        (specklespacing / 2) + 1,
         size = Y.shape)
 
     #new points
@@ -94,7 +94,7 @@ def fftanalysis():
         image == 0,
         labels,
         range(1, num_features + 1))
-    print("Using FFT analysis, average speckle size is ",np.mean(areas))
+    print(f"average speckle size is {np.mean(areas):.2f} pixels")
     plt.show()
 
 

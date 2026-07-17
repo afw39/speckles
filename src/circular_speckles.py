@@ -3,8 +3,8 @@
 #imports
 import numpy as np
 import matplotlib.pyplot as plt
-#from scipy import ndimage
-#from scipy import fft
+from scipy import ndimage
+from scipy import fft
 from scipy.fft import fft2, fftshift, ifft2
 from scipy.signal import peak_widths
 
@@ -59,12 +59,13 @@ def coordinate_generation():
 
 #thats the same code as before but i think its fine, the X_new and Y_new are the new centres of the speckles. so when changing pixels, need to change the pixels of the centre and al pixels within the radius (but in a circular way? so cant make a square by accident)
 
-#generating image with user inputted blackwhite balance
+#making/plotting points onto my image
 def imagegeneration():
-    image = np.full((imageheight, imagewidth), blackwhite) #this is fine
+    image = np.full((imageheight, imagewidth), blackwhite) 
     #drawing each speckle onto the image
-    yy, xx = np.ogrid[:imageheight, :imagewidth]
-    for x, y in zip(X_new.ravel(), Y_new.ravel()):
+    yy, xx = np.ogrid[:imageheight, :imagewidth] #makes coordinates for each centre in a grid up to image dimensions - ogrid lets you do it at the same time. 
+    for x, y in zip(X_new.ravel(), Y_new.ravel()): #loops through every speckle centre, the .ravel() changes them from a matrix and makes them into the corresponding array. 
+        #this bacially colours in every pixel that is less than or equal distance away from the centre 
         mask = (xx - x)**2 + (yy-y)**2 <= speckle_radius**2 #making circles instead of squares/rectangles
         image[mask] = 0
     return image
@@ -77,4 +78,26 @@ X_new, Y_new = coordinate_generation()
 image = imagegeneration()
 plt.imshow(image, cmap = 'gray', vmin = 0, vmax = 1)
 plt.savefig('new_speckle_pattern.tiff')
+
+#trying to do the fourier
+def average_speckle_size(image):
+    F = fft2(image - np.mean(image))
+    autocorr = fftshift(np.real(ifft2(np.abs(F)**2)))
+    autocorr /= autocorr.max()
+
+    #autocorr = autocorrelation(image)
+    centre_y = autocorr.shape[0] // 2
+    profile = autocorr[centre_y, :]
+    centre = len(profile) // 2
+    print(profile[centre])
+    widths,_,_, _ = peak_widths(
+        profile,
+        [centre],
+        rel_height=0.5
+    )
+    return widths[0]
+
+size =  speckle_size * average_speckle_size(image)
+print(f"Average speckle size = {size:.2f} pixels")
+
 plt.show()

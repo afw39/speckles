@@ -1,3 +1,5 @@
+#gonna try make my speckles circular instead - then the fft might work better - can use most of the same code i think, will just ask for the speckle size not the speckle dimensions and then get the radius from that - but for circular speckles idk if i can use the image thing cause gotta change square pixels into circles
+
 #imports
 import numpy as np
 import matplotlib.pyplot as plt
@@ -6,7 +8,6 @@ from scipy import fft
 from scipy.fft import fft2, fftshift, ifft2
 from scipy.signal import peak_widths
 
-
 #functions
 def userinputs():
     imageheight = int(input("Enter height of image in pixels: "))
@@ -14,15 +15,14 @@ def userinputs():
 
     specksize = True
     while specksize == True:
-        speckle_width = int(input("Enter the desired speckle width in pixels: "))
-        speckle_height = int(input("Enter the desired speckle height in pixels: "))
-        if speckle_width < 3 or speckle_height < 3:
-            print("Speckles must be at least 3 x 3 pixels. ")
+        speckle_size = int(input("Enter the desired speckle size in pixels: "))
+        if speckle_size < 9:
+            print("Speckles must be at least 9 pixels")
             specksize = True
         else:
             specksize = False
 
-    specklespacing = int(input("Enter how far apart you would like the speckles (between midpoints): "))
+    specklespacing = int(input("Enter how far apart you would like the speckles (between centres): "))
 
     bwbal = True
     while bwbal == True:
@@ -33,17 +33,9 @@ def userinputs():
             print("Please enter a number in the correct range.")
             bwbal = True
 
-    return imagewidth, imageheight, speckle_height, speckle_width, specklespacing, blackwhite
+    return imagewidth, imageheight, speckle_size, specklespacing, blackwhite
 
-
-#finding out how many speckles i have
-def speckle_num(imagewidth, specklespacing, imageheight):
-    x_speckles = imagewidth /specklespacing
-    y_speckles = imageheight / specklespacing
-    speckle_number = x_speckles * y_speckles
-    return speckle_number
-
-#generate my grid now:
+#generating the uniform grid
 def coordinate_generation():
     x_coords = np.arange(0, imagewidth, specklespacing)
     y_coords = np.arange(0, imageheight, specklespacing)
@@ -56,15 +48,18 @@ def coordinate_generation():
         size = X.shape)
 
     y_disp = np.random.randint(
-        (-1 * specklespacing / 2) + 1,
-        (specklespacing / 2) + 1,
+        (-1 * specklespacing // 2) + 1,
+        (specklespacing // 2) + 1,
         size = Y.shape)
-
-    #new points - sum of random displacement and grid coordinate
+    
+    #adding my random displacements to each grid point
     X_new = X + x_disp 
     Y_new = Y + y_disp
     return X_new, Y_new
 
+#thats the same code as before but i think its fine, the X_new and Y_new are the new centres of the speckles. so when changing pixels, need to change the pixels of the centre and al pixels within the radius (but in a circular way? so cant make a square by accident)
+
+#making/plotting points onto my image
 def imagegeneration():
     image = np.full((imageheight, imagewidth), blackwhite) 
     #drawing each speckle onto the image
@@ -75,19 +70,16 @@ def imagegeneration():
         image[mask] = 0
     return image
 
-
 #main code
-imagewidth, imageheight, speckle_height, speckle_width, specklespacing, blackwhite = userinputs()
-speckle_size = speckle_height * speckle_width
+imagewidth, imageheight, speckle_size, specklespacing, blackwhite = userinputs()
+speckle_radius = np.sqrt( speckle_size / np.pi)
 imagesize = imagewidth * imageheight
-number_of_speckles = speckle_num(imagewidth, specklespacing, imageheight)
 X_new, Y_new = coordinate_generation()
 image = imagegeneration()
 plt.imshow(image, cmap = 'gray', vmin = 0, vmax = 1)
 plt.savefig('new_speckle_pattern.tiff')
 
-
-
+#trying to do the fourier
 def average_speckle_size(image):
     F = fft2(image - np.mean(image))
     autocorr = fftshift(np.real(ifft2(np.abs(F)**2)))
@@ -105,7 +97,7 @@ def average_speckle_size(image):
     )
     return widths[0]
 
-size =  average_speckle_size(image)
+size =  speckle_size * average_speckle_size(image)
 print(f"Average speckle size = {size:.2f} pixels")
 
 plt.show()

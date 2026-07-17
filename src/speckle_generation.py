@@ -57,8 +57,8 @@ def coordinate_generation():
         (specklespacing / 2) + 1,
         size = Y.shape)
 
-    #new points
-    X_new = X + x_disp #adding my random displacements to each grid point
+    #new points - sum of random displacement and grid coordinate
+    X_new = X + x_disp 
     Y_new = Y + y_disp
     return X_new, Y_new
 
@@ -75,6 +75,8 @@ def imagegeneration():
     return image
 
 def fftanalysis():
+
+    #dont think this code actually works so leaving it in comments for now
     #fft = np.fft.fft2(image)
     #fft_shifted = np.fft.fftshift(fft) # moves 0 frequency bit to the centre - easier to read
     #magnitude = np.abs(fft_shifted)

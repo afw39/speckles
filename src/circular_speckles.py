@@ -5,8 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import ndimage
 from scipy import fft
-from scipy.fft import fft2, fftshift, ifft2
-from scipy.signal import peak_widths
+from scipy.fft import fft, fftfreq
+from scipy.ndimage import gaussian_filter1d
 
 #functions
 def userinputs():
@@ -97,25 +97,57 @@ image = imagegeneration()
 plt.imshow(image, cmap = 'gray', vmin = 0, vmax = 1)
 plt.savefig('new_speckle_pattern.tiff')
 
-#Alright this is perfect now gotta do the FFT for this one but will deal with that after lunch. Am going to try and use the code i had before and see if it now works on this new 'smoothed' speckle pattern 
-def average_speckle_size(image):
-    F = fft2(image - np.mean(image))
-    autocorr = fftshift(np.real(ifft2(np.abs(F)**2)))
-    autocorr /= autocorr.max()
 
-    #autocorr = autocorrelation(image)
-    centre_y = autocorr.shape[0] // 2
-    profile = autocorr[centre_y, :]
-    centre = len(profile) // 2
-    print(profile[centre])
-    widths,_,_, _ = peak_widths(
-        profile,
-        [centre],
-        rel_height=0.5
+#gonna do the fft again but this time going to take two 1D ffts in the x-direcion and in the y-direction and see what happens and then plot them on the same graph. 
+
+x_profile = np.mean(image, axis = 0) #gives 1 value per column
+x_profile = x_profile - np.mean(x_profile)
+x_fft = fft(x_profile)
+#magnitude spectrum
+x_magnitude = np.abs(x_fft)
+
+
+#same for the y direction
+y_profile = np.mean(image, axis = 1)
+y_profile = y_profile - np.mean(y_profile)
+y_fft = fft(y_profile)
+y_magnitude = np.abs(y_fft)
+
+#frequency axis
+freq = fftfreq(len(x_profile), d = 1)
+
+positive = freq > 0
+freq = freq[positive]
+x_magnitude = x_magnitude[positive]
+y_magnitude = y_magnitude[positive]
+#can take an average magnitude as the speckles are circular - no favourtism between x/y
+avg_magnitude = (x_magnitude + y_magnitude) / 2
+
+avg_magnitude = gaussian_filter1d(avg_magnitude, sigma = 3) #smoothing out the signal
+#valid = freq > 0
+peak_index = np.argmax(avg_magnitude)
+peak_frequency = freq[peak_index]
+
+#peak = np.max(avg_magnitude)
+#half_max = peak/2
+
+
+average_speckle_clump_length = 1/peak_frequency
+average_speckle_clump = average_speckle_clump_length / (2*speckle_radius)
+average_speckle_size = average_speckle_clump * speckle_size
+print(f"Estimated average speckle size is {average_speckle_size:.2f} pixels.")
+print(speckle_spacing)
+plt.figure()
+plt.plot(freq, avg_magnitude)
+plt.axvline(
+    peak_frequency,
+    color = 'red',
+    linestyle = '--',
     )
-    return widths[0]
 
-size = average_speckle_size(image)
-print(f"Average speckle size = {size:.2f} pixels")
-
+plt.xlabel("Spatial frequency (cycles/pixel)")
+plt.ylabel("Magnitude")
+plt.savefig("fft_pattern.tiff")
 plt.show()
+
+#pretty happy with this code - no idea if it works or not but oh well!! seems to be giving me correct looking outputs

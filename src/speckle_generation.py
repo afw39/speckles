@@ -106,7 +106,7 @@ def average_speckle_size(image):
     )
     return widths[0]
 
-size =  speckle_width* average_speckle_size(image)
+size =  average_speckle_size(image)
 print(f"Average speckle size = {size:.2f} pixels")
 
 plt.show()

@@ -32,11 +32,7 @@ def userinputs():
             print("Please enter a number in the correct range.")
             bwbal = True
 
-<<<<<<< HEAD
-    return imagewidth, imageheight, speckle_size, blackwhite
-=======
     return imagewidth, imageheight, speckle_radius, blackwhite
->>>>>>> circles
 
 #instead of getting user input for speckle spacing, see what 'density' of speckles is needed, and then using the image size/speckle siz in pixels can work out how much the speckle spacing is.  Going to write a separate function for this:
 
@@ -45,12 +41,6 @@ def specklespacing():
     number_of_speckles = imagesize * blackwhite / speckle_size
     speckle_spacing = np.sqrt(imagesize / number_of_speckles)
     return speckle_spacing
-<<<<<<< HEAD
-
-#think that will be fine
-
-=======
->>>>>>> circles
 
 #generating the uniform grid
 def coordinate_generation():
@@ -75,23 +65,6 @@ def coordinate_generation():
     Y_new = Y + y_disp
     return X_new, Y_new
 
-<<<<<<< HEAD
-#making/plotting points onto my image
-def imagegeneration():
-    image = np.full((imageheight, imagewidth), 1) 
-    #drawing each speckle onto the image
-    yy, xx = np.ogrid[:imageheight, :imagewidth] #makes coordinates for each centre in a grid up to image dimensions - ogrid lets you do it at the same time. 
-    for x, y in zip(X_new.ravel(), Y_new.ravel()): #loops through every speckle centre, the .ravel() changes them from a matrix and makes them into the corresponding array. 
-        #this bacially colours in every pixel that is less than or equal distance away from the centre 
-        mask = (xx - x)**2 + (yy-y)**2 <= speckle_radius**2 #making circles instead of squares/rectangles - will need to ammend this so that i can do like subset pixels. 
-        image[mask] = 0
-    return image
-
-#main code
-imagewidth, imageheight, speckle_size, blackwhite = userinputs()
-imagesize = imagewidth * imageheight
-speckle_radius = np.sqrt( speckle_size / np.pi)
-=======
 #new imagegeneration code:
 def imagegeneration():
     image = np.full((imageheight, imagewidth), 1.0)
@@ -118,15 +91,11 @@ def imagegeneration():
 imagewidth, imageheight, speckle_radius, blackwhite = userinputs()
 imagesize = imagewidth * imageheight
 speckle_size = np.pi * (speckle_radius**2)
->>>>>>> circles
 speckle_spacing = specklespacing()
 X_new, Y_new = coordinate_generation()
 image = imagegeneration()
 plt.imshow(image, cmap = 'gray', vmin = 0, vmax = 1)
 plt.savefig('new_speckle_pattern.tiff')
-<<<<<<< HEAD
-plt.show()
-=======
 
 
 #gonna do the fft again but this time going to take two 1D ffts in the x-direcion and in the y-direction and see what happens and then plot them on the same graph. 
@@ -182,4 +151,3 @@ plt.savefig("fft_pattern.tiff")
 plt.show()
 
 #pretty happy with this code - no idea if it works or not but oh well!! seems to be giving me correct looking outputs
->>>>>>> circles

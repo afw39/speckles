@@ -15,9 +15,9 @@ def userinputs():
 
     specksize = True
     while specksize == True:
-        speckle_size = int(input("Enter the desired speckle size in pixels: "))
-        if speckle_size < 9:
-            print("Speckles must be at least 9 pixels")
+        speckle_radius = int(input("Enter the speckle radius in pixels: "))
+        if speckle_radius < 3:
+            print("Speckles must be at least 3 pixels in radius")
             specksize = True
         else:
             specksize = False
@@ -32,7 +32,7 @@ def userinputs():
             print("Please enter a number in the correct range.")
             bwbal = True
 
-    return imagewidth, imageheight, speckle_size, blackwhite
+    return imagewidth, imageheight, speckle_radius, blackwhite
 
 #instead of getting user input for speckle spacing, see what 'density' of speckles is needed, and then using the image size/speckle siz in pixels can work out how much the speckle spacing is.  Going to write a separate function for this:
 
@@ -47,7 +47,7 @@ def coordinate_generation():
     x_coords = np.arange(0, imagewidth, speckle_spacing)
     y_coords = np.arange(0, imageheight, speckle_spacing)
     X, Y = np.meshgrid(x_coords, y_coords) #making my grid
-    plt.scatter(X,Y)
+    #plt.scatter(X,Y) remove the hash if want to see the original grid
 
     #generating random displacements
     x_disp = np.random.randint(
@@ -70,7 +70,7 @@ def imagegeneration():
     image = np.full((imageheight, imagewidth), 1.0)
     # splitting each pixel into 16 - 4x4 subpixels
     samples = 4
-    offsets = (np.arange(samples) + 1) / (samples - 1)
+    offsets = (np.arange(samples) + 0.5) / samples - 0.5
 
     yy, xx = np.meshgrid(
         np.arange(imageheight),
@@ -84,18 +84,38 @@ def imagegeneration():
                 coverage += dist2 <= speckle_radius**2
         coverage /= samples**2
         #need it to be greyscale proportional to how much pixel is being covered
-        image *= (1-coverage)
+        image = np.minimum(image, 1 - coverage)
     return image
 
 #main code
-imagewidth, imageheight, speckle_size, blackwhite = userinputs()
+imagewidth, imageheight, speckle_radius, blackwhite = userinputs()
 imagesize = imagewidth * imageheight
-speckle_radius = np.sqrt( speckle_size / np.pi)
+speckle_size = np.pi * (speckle_radius**2)
 speckle_spacing = specklespacing()
 X_new, Y_new = coordinate_generation()
 image = imagegeneration()
 plt.imshow(image, cmap = 'gray', vmin = 0, vmax = 1)
 plt.savefig('new_speckle_pattern.tiff')
-plt.show()
 
-#Alright this is perfect now gotta do the FFT for this one but will deal with that after lunch. 
+#Alright this is perfect now gotta do the FFT for this one but will deal with that after lunch. Am going to try and use the code i had before and see if it now works on this new 'smoothed' speckle pattern 
+def average_speckle_size(image):
+    F = fft2(image - np.mean(image))
+    autocorr = fftshift(np.real(ifft2(np.abs(F)**2)))
+    autocorr /= autocorr.max()
+
+    #autocorr = autocorrelation(image)
+    centre_y = autocorr.shape[0] // 2
+    profile = autocorr[centre_y, :]
+    centre = len(profile) // 2
+    print(profile[centre])
+    widths,_,_, _ = peak_widths(
+        profile,
+        [centre],
+        rel_height=0.5
+    )
+    return widths[0]
+
+size = average_speckle_size(image)
+print(f"Average speckle size = {size:.2f} pixels")
+
+plt.show()

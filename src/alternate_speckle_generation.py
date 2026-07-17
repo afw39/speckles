@@ -1,15 +1,12 @@
-#okay we gonna try make a pattern with some user inputs then we will fix whatever needs to be fixed.
-import numpy as np #for number stuff
-import matplotlib.pyplot as plt # for the plots/visualisation
+#imports
+import numpy as np 
+import matplotlib.pyplot as plt 
 
 #start with some user inputs:
 def inputvalues():
-    #need to see that the image size is the right height, might do this as a function to see if their will be enough speckles in the image, run it first to get the measurements and if not, then will run it again to see if they will change it? for now will leave it and im just gonna enter allowed values.
     imagewidth = int(input("Enter image width "))
     imageheight = int(input("Enter image height "))
 
-
-    #   asking for speckle dimensions and seeing if they are at least 3 x 3
     speckles = True
     while speckles == True:
         specklewidth= int(input("Enter width of speckles. "))
@@ -23,10 +20,8 @@ def inputvalues():
             speckles = False
         else:
             speckles = False
-    # maybe should also add that there needs to be a certain number of speckles per image (maybe put both the image questions and the speckle questions in the same loop)
 
-
-    # using this as the density of speckles?
+    # using this as the density of speckles
     bw = True
     while bw == True:
         bwbalance = float(input("Enter black and white balance (0.0 is black- 1.0 is white). "))
@@ -39,8 +34,7 @@ def inputvalues():
     return imagewidth, imageheight, specklewidth, speckleheight, bwbalance, speckle_area
 
 
-imagewidth, imageheight, specklewidth, speckleheight, bwbalance, speckle_area = inputvalues() # calling the function now
-#need to make a new variable which takes into account the image size and the speckle size/area and the bwbalance which is the density to work out how many speckles/numbers to generate - that will go into the size bit. 
+imagewidth, imageheight, specklewidth, speckleheight, bwbalance, speckle_area = inputvalues() 
 
 def speckle_num(imagewidth, imageheight, specklewidth, speckleheight, bwbalance):
     imagearea = (imagewidth * imageheight)
@@ -52,6 +46,7 @@ def speckle_num(imagewidth, imageheight, specklewidth, speckleheight, bwbalance)
 number_of_speckles = speckle_num(imagewidth, imageheight, specklewidth, speckleheight, bwbalance)
 speckle_area = specklewidth * speckleheight
 
+#generating random coordinates
 x_rand = np.random.randint(
     0,
     imagewidth - specklewidth + 1,
@@ -63,14 +58,14 @@ y_rand = np.random.randint(
     size=number_of_speckles)
 
 
-#will obv take user inputs for this
+#plotting the image size
 plt.xlim(0, imagewidth)
 plt.ylim(0, imageheight)
 plt.gca().set_aspect('equal')
 
 image = np.full((imageheight,imagewidth), bwbalance)
 
-for i in range(number_of_speckles): #changing each pixel one by one to black from white
+for i in range(number_of_speckles): #changing each pixel one by one to black from background colour
     image[
         y_rand[i]:y_rand[i] + speckleheight,
         x_rand[i]:x_rand[i] + specklewidth

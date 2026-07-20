@@ -150,4 +150,4 @@ plt.ylabel("Magnitude")
 plt.savefig("fft_pattern.tiff")
 plt.show()
 
-#pretty happy with this code - no idea if it works or not but oh well!! seems to be giving me correct looking outputs
+#pretty happy with this code - no idea if it works or not but oh well!! seems to be giving me correct looking outputs - giving me suitable i think stuff for a range of speckle sizes so we shall see

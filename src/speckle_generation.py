@@ -79,25 +79,4 @@ image = imagegeneration()
 plt.imshow(image, cmap = 'gray', vmin = 0, vmax = 1)
 plt.savefig('new_speckle_pattern.tiff')
 
-#trying to do the fourier
-def average_speckle_size(image):
-    F = fft2(image - np.mean(image))
-    autocorr = fftshift(np.real(ifft2(np.abs(F)**2)))
-    autocorr /= autocorr.max()
-
-    #autocorr = autocorrelation(image)
-    centre_y = autocorr.shape[0] // 2
-    profile = autocorr[centre_y, :]
-    centre = len(profile) // 2
-    print(profile[centre])
-    widths,_,_, _ = peak_widths(
-        profile,
-        [centre],
-        rel_height=0.5
-    )
-    return widths[0]
-
-size =  speckle_size * average_speckle_size(image)
-print(f"Average speckle size = {size:.2f} pixels")
-
 plt.show()

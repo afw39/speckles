@@ -42,7 +42,7 @@ def coordinate_generation():
     x_coords = np.arange(0, imagewidth, speckle_spacing)
     y_coords = np.arange(0, imageheight, speckle_spacing)
     X, Y = np.meshgrid(x_coords, y_coords) #making my grid
-    #plt.scatter(X,Y) remove the hash if want to see the original grid
+    plt.scatter(X,Y) #remove the hash if want to see the original grid
 
     #generating random displacements
     x_disp = np.random.randint(
@@ -62,23 +62,29 @@ def coordinate_generation():
 
 #new imagegeneration code:
 def imagegeneration():
-    image = np.full((imageheight, imagewidth), 1.0)
+    image = np.full((imageheight, imagewidth), 1.0) #each pixel starts as white
     # splitting each pixel into 16 - 4x4 subpixels
     samples = 4
-    offsets = (np.arange(samples) + 1) / samples - 1
-
+    offsets = (np.arange(samples) + 0.5) / samples - 0.5 #subpixel positions rel to pixel centre
+    #making an array with every pixel coordinate
     yy, xx = np.meshgrid(
         np.arange(imageheight),
         np.arange(imagewidth),
         indexing = 'ij')
+    #first for loop loops through every speckle centre
     for x, y in zip(X_new.ravel(), Y_new.ravel()):
+        #creating an array for storing how much of the pixel is in the radius
         coverage = np.zeros_like(image, dtype = float)
+        #looping over all the subpixel locations
         for dx in offsets:
             for dy in offsets:
-                dist2 = ((xx+dx)-x)**2 + ((yy+dy)-y)**2
+                #calcs squared dist from subpixel to speckle centre
+                dist2 = ((xx+dx)-x)**2 + ((yy+dy)-y)**2 
+                #check is that dist in the speckle radius
                 coverage += dist2 <= speckle_radius**2
+        #gives value based on how much is covered
         coverage /= samples**2
-        #need it to be greyscale proportional to how much pixel is being covered
+        #coverts proportion into colour
         image = np.minimum(image, 1 - coverage)
     return image
 

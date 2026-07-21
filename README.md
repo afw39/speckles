@@ -24,6 +24,7 @@ README.md
 pyproject.toml
 src/
 |---- alternate_speckle_generation.py  #generation of speckle pattern via random coordinate generation
+|---- circular_speckles.py             #generation of circular speckles via grid displacements
 |---- speckle_generation.py            #generation of speckle pattern via random displacements from uniform grid.
 
 ```

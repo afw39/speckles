@@ -42,7 +42,7 @@ def coordinate_generation():
     x_coords = np.arange(0, imagewidth, speckle_spacing)
     y_coords = np.arange(0, imageheight, speckle_spacing)
     X, Y = np.meshgrid(x_coords, y_coords) #making my grid
-    plt.scatter(X,Y) #remove the hash if want to see the original grid
+    #plt.scatter(X,Y) #remove the hash if want to see the original grid
 
     #generating random displacements
     x_disp = np.random.randint(
@@ -56,7 +56,7 @@ def coordinate_generation():
         size = Y.shape)
     
     #adding my random displacements to each grid point
-    X_new = X + x_disp 
+    X_new = X + x_disp
     Y_new = Y + y_disp
     return X_new, Y_new
 

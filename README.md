@@ -31,3 +31,13 @@ src/
 
 ## Example scripts
 also need to work out how to do this
+
+
+To do today: (22/07/29)
+
+    make a list of things to ask lloyd about = before lunch! (example scripts)
+    finish my speckles/tidy up the fileage (keep the three different files on main branch, only have circular on dev but keep the code on dev for plotting the fft incase its needed and delete circles branch - this branch!)
+    finish first part of DIC presentation
+    try get happy with practice lab contents
+    watch more MatchID lectures
+

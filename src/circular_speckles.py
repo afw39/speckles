@@ -111,7 +111,8 @@ def fftanalysis():
     fft_speckle_size = 1/(freq[peaks[2]])
     return fft_speckle_size
 
-#main code
+
+
 imagewidth, imageheight, speckle_radius, blackwhite = userinputs()
 imagesize = imagewidth * imageheight
 speckle_size = np.pi * (speckle_radius**2)

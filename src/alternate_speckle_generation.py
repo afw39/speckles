@@ -2,7 +2,7 @@
 import numpy as np 
 import matplotlib.pyplot as plt 
 
-#start with some user inputs:
+
 def inputvalues():
     imagewidth = int(input("Enter image width "))
     imageheight = int(input("Enter image height "))
@@ -36,6 +36,8 @@ def inputvalues():
 
 imagewidth, imageheight, specklewidth, speckleheight, bwbalance, speckle_area = inputvalues() 
 
+
+#calculating required number of speckles
 def speckle_num(imagewidth, imageheight, specklewidth, speckleheight, bwbalance):
     imagearea = (imagewidth * imageheight)
     specklearea = specklewidth * speckleheight

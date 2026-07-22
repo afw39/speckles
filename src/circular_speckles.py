@@ -1,7 +1,6 @@
 #imports
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy import ndimage
 from scipy import fft
 from scipy.fft import fft, fftfreq
 from scipy.ndimage import gaussian_filter1d
@@ -33,9 +32,7 @@ def userinputs():
 
     return imagewidth, imageheight, speckle_radius, blackwhite
 
-#instead of getting user input for speckle spacing, see what 'density' of speckles is needed, and then using the image size/speckle siz in pixels can work out how much the speckle spacing is.  Going to write a separate function for this:
-
-#lets work out what grid/speckle spacing is needed
+#calculating my grid
 def specklespacing():
     number_of_speckles = imagesize * blackwhite / speckle_size
     speckle_spacing = np.sqrt(imagesize / number_of_speckles)
@@ -86,6 +83,34 @@ def imagegeneration():
         image = np.minimum(image, 1 - coverage)
     return image
 
+#fft analysis
+def fftanalysis():
+    x_profile = np.mean(image, axis = 0) #gives 1 value per column
+    x_profile = x_profile - np.mean(x_profile)
+    x_fft = fft(x_profile)
+    #magnitude spectrum
+    x_magnitude = np.abs(x_fft)
+    #same for the y direction
+    y_profile = np.mean(image, axis = 1)
+    y_profile = y_profile - np.mean(y_profile)
+    y_fft = fft(y_profile)
+    y_magnitude = np.abs(y_fft)
+
+    #frequency axis
+    freq = fftfreq(len(x_profile), d = 1)
+
+    positive = freq > 0
+    freq = freq[positive]
+    x_magnitude = x_magnitude[positive]
+    y_magnitude = y_magnitude[positive]
+    #can take an average magnitude as the speckles are circular - no favourtism between x/y
+    avg_magnitude = (x_magnitude + y_magnitude) / 2
+    avg_magnitude = gaussian_filter1d(avg_magnitude, sigma = 3) #smoothing out the signal
+
+    peaks, properties = find_peaks(avg_magnitude)
+    fft_speckle_size = 1/(freq[peaks[2]])
+    return fft_speckle_size
+
 #main code
 imagewidth, imageheight, speckle_radius, blackwhite = userinputs()
 imagesize = imagewidth * imageheight
@@ -93,54 +118,21 @@ speckle_size = np.pi * (speckle_radius**2)
 speckle_spacing = specklespacing()
 X_new, Y_new = coordinate_generation()
 image = imagegeneration()
+fft_speckle_size = fftanalysis()
 plt.imshow(image, cmap = 'gray', vmin = 0, vmax = 1)
 plt.savefig('new_speckle_pattern.tiff')
 
-
-x_profile = np.mean(image, axis = 0) #gives 1 value per column
-x_profile = x_profile - np.mean(x_profile)
-x_fft = fft(x_profile)
-#magnitude spectrum
-x_magnitude = np.abs(x_fft)
-
-
-#same for the y direction
-y_profile = np.mean(image, axis = 1)
-y_profile = y_profile - np.mean(y_profile)
-y_fft = fft(y_profile)
-y_magnitude = np.abs(y_fft)
-
-#frequency axis
-freq = fftfreq(len(x_profile), d = 1)
-
-positive = freq > 0
-freq = freq[positive]
-x_magnitude = x_magnitude[positive]
-y_magnitude = y_magnitude[positive]
-#can take an average magnitude as the speckles are circular - no favourtism between x/y
-avg_magnitude = (x_magnitude + y_magnitude) / 2
-
-avg_magnitude = gaussian_filter1d(avg_magnitude, sigma = 3) #smoothing out the signal
-
-peaks, properties = find_peaks(avg_magnitude)
-second_peak_index = peaks[2]
-peak_frequency = freq[second_peak_index]
-
-average_speckle_clump_length = 1/peak_frequency
-average_speckle_clump = average_speckle_clump_length / (2*speckle_radius)
-average_speckle_size = average_speckle_clump * speckle_size
-print(average_speckle_clump_length)
-print(f"Estimated average speckle size is {average_speckle_clump_length:.2f} pixels.")
+print(f"Estimated average speckle size is {fft_speckle_size:.2f} pixels.")
 print(speckle_spacing)
 #plt.figure()
 #plt.plot(freq, avg_magnitude)
 #plt.axvline(
- #   peak_frequency,
-  #  color = 'red',
-   # linestyle = '--',
-    #)
-
+#    peak_frequency,
+#    color = 'red',
+#    linestyle = '--',
+#    )
 #plt.xlabel("Spatial frequency (cycles/pixel)")
 #plt.ylabel("Magnitude")
 #plt.savefig("fft_pattern.tiff")
+
 plt.show()

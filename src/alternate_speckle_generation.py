@@ -75,7 +75,4 @@ for i in range(number_of_speckles): #changing each pixel one by one to black fro
 
 plt.imshow(image, cmap = 'gray')
 plt.savefig("speckle_image.tiff") 
-
-
-
 plt.show()

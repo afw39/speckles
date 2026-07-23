@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #pattern generation
-def generate_pattern(imagewidth, imageheight, speckle_radius, blackwhite, save):
+def generate_pattern(imagewidth, imageheight, speckle_radius, blackwhite, grid, save):
     print(f"generating {imagewidth} x {imageheight}")
     imagesize = imagewidth * imageheight
     speckle_size = np.pi * (speckle_radius**2)
@@ -13,7 +13,8 @@ def generate_pattern(imagewidth, imageheight, speckle_radius, blackwhite, save):
     x_coords = np.arange(0, imagewidth, speckle_spacing)
     y_coords = np.arange(0, imageheight, speckle_spacing)
     X, Y = np.meshgrid(x_coords, y_coords) #making my grid
-    #plt.scatter(X,Y) remove the hash if want to see the original grid - ask a user input for this
+    if grid:
+        plt.scatter(X,Y)
 
     #generating random displacements
     x_disp = np.random.randint(

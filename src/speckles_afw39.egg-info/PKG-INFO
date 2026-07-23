@@ -1,8 +1,11 @@
 Metadata-Version: 2.4
-Name: speckles
-Version: 0.1.0
+Name: speckles_afw39
+Version: 0.1.1
 Summary: Random speckle generator in python
 Author-email: afw39 <aoife.willis@ukaea.uk>
+License-Expression: MIT
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
 Requires-Python: >=3.12
 Description-Content-Type: text/markdown
 License-File: LICENSE

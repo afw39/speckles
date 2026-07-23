@@ -1,8 +1,0 @@
-LICENSE
-README.md
-pyproject.toml
-src/speckles.egg-info/PKG-INFO
-src/speckles.egg-info/SOURCES.txt
-src/speckles.egg-info/dependency_links.txt
-src/speckles.egg-info/requires.txt
-src/speckles.egg-info/top_level.txt

@@ -4,6 +4,9 @@ pyproject.toml
 src/speckles/__init__.py
 src/speckles/alternate_speckle_generation.py
 src/speckles/circular_speckles.py
+src/speckles/fft.py
+src/speckles/pattern.py
+src/speckles/speckle_generator.py
 src/speckles_afw39.egg-info/PKG-INFO
 src/speckles_afw39.egg-info/SOURCES.txt
 src/speckles_afw39.egg-info/dependency_links.txt

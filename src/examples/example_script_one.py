@@ -14,8 +14,8 @@ def main() -> None:
     '''
     imagewidth = 1000
     imageheight = 1000
-    speckle_radius = 10
-    blackwhite = 0.5
+    speckle_radius = 7
+    blackwhite = 0.6
     grid = False
     save = True
     visualfft = True

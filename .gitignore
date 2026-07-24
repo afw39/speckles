@@ -1,3 +1,13 @@
+#python packaging
+*.egg-info/
+dist/
+build/
+*.tiff
+
+#virtual environment
 venv/
 .venv/
-*.tiff
+
+#python cache
+__pycache__/
+*.pyc

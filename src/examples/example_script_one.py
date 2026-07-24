@@ -24,5 +24,3 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
-
-#THIS CODE RUNS WITH THE INIT, FFT, AND THE PATTERN.PY DONT CHANGE THOSE FILES PLS - except it just runs all the time

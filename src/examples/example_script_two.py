@@ -20,7 +20,8 @@ def main():
     bwbalance = 0.5
     save = True
 
-    image = alternate_pattern_generation(imagewidth, imageheight, specklewidth, speckleheight, bwbalance, save)
+    alternate_pattern_generation(imagewidth, imageheight, specklewidth, speckleheight, bwbalance, save)
+    
 
 if __name__ == '__main__':
     main()

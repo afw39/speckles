@@ -1,6 +1,10 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name  = "speckles"
-version = "0.1.0"
+name  = "speckles_afw39"
+version = "0.1.8"
 description = "Random speckle generator in python"
 authors = [
     {name = "afw39", email = "aoife.willis@ukaea.uk"}
@@ -12,6 +16,15 @@ dependencies = [
     "matplotlib",
     "scipy"
 ]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICENSE*"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]

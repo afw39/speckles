@@ -65,5 +65,4 @@ def generate_pattern(imagewidth, imageheight, speckle_radius, blackwhite, grid, 
     plt.imshow(image, cmap = 'gray', vmin = 0, vmax = 1)
     if save:
         plt.savefig('new_speckle_pattern.tiff')
-        plt.show()
     return image

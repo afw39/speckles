@@ -28,8 +28,10 @@ def fftanalysis(image, visualfft):
 
     #can take an average magnitude as the speckles are circular - no favourtism between x/y
     avg_magnitude = (x_magnitude + y_magnitude) / 2
-    avg_magnitude = gaussian_filter1d(avg_magnitude, sigma = 3) #smoothing out the signal
+    #smoothing out the signal
+    avg_magnitude = gaussian_filter1d(avg_magnitude, sigma = 3) 
 
+    #finding the correct peak for speckle size
     peaks, properties = find_peaks(avg_magnitude)
     fft_speckle_size = 1/(freq[peaks[2]])
 

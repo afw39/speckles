@@ -10,7 +10,7 @@ def main() -> None:
     blackwhite (float) = ratio of black to white pixels generated - determines speckle number/spacing (1.0 for 100% speckels, 0.0 for no speckles). For e.g 0.5 - won't be exactly 50% black and 50% white pixels as the speckles will overlap (so put the number a bit closer to one/bigger than desired) 
     grid (bool) = determines if original grid is printed over speckle pattern (to see displacements from original points - not reccommended)
     save (bool) = determines if speckle pattern is saved or not
-    visualfft (bool) = determines if fft is displayed and saved 
+    visualfft (bool) = determines if fft is displayed and saved (will still perform the fft and output average speckle size if visualfft = False)
     '''
     imagewidth = 1000
     imageheight = 1000
@@ -18,7 +18,7 @@ def main() -> None:
     blackwhite = 0.8
     grid = False
     save = True
-    visualfft = True
+    visualfft = False
 
     image = generate_pattern(imagewidth, imageheight, speckle_radius, blackwhite, grid, save)
     fftanalysis(image,visualfft)

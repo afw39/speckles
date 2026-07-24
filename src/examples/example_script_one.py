@@ -12,10 +12,10 @@ def main() -> None:
     save (bool) = determines if speckle pattern is saved or not
     visualfft (bool) = determines if fft is displayed and saved
     '''
-    imagewidth = 1000
-    imageheight = 1000
-    speckle_radius = 7
-    blackwhite = 0.6
+    imagewidth = 400
+    imageheight = 400
+    speckle_radius = 10
+    blackwhite = 0.9
     grid = False
     save = True
     visualfft = True

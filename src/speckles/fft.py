@@ -6,6 +6,15 @@ from scipy.ndimage import gaussian_filter1d
 from scipy.signal import find_peaks
 
 def fftanalysis(image, visualfft):
+
+    '''
+    Function to perform a fast fourier transform analysis of the generated speckle pattern and outputs the estimated average speckle size.
+
+    Parameters:
+    - image (array) = the generated speckle pattern from generated_pattern
+    - visualfft (bool) = displays and saves the FFT spectrum if set to True
+    
+    '''
     x_profile = np.mean(image, axis =0)
     x_profile = x_profile - np.mean(x_profile)
     x_fft = fft(x_profile)

@@ -4,6 +4,17 @@ import matplotlib.pyplot as plt
 
 #pattern generation
 def generate_pattern(imagewidth, imageheight, speckle_radius, blackwhite, grid, save):
+    '''
+    Function that generates a random speckle pattern based on random displacements from a uniform grid. Displaces midpoints of speckles and fills in any pixels within that radius. 
+
+    Parameters:
+    - imagewidth, imageheight (int) = image dimensions (pixels)
+    - speckle_radius (int) = radius of speckles (pixels)
+    - blackwhite (float) = proportion of black:white pixels (0.0 is completely white, 1.0 is completely black)
+    - grid (bool) = set to True to see original grid printed over the speckle pattern (not very useful to see so set to False)
+    - save (bool) = set to True to save the pattern as a .tiff
+    
+    '''
 
     print(f"generating {imagewidth} x {imageheight}")
     imagesize = imagewidth * imageheight

@@ -5,6 +5,16 @@ import matplotlib.pyplot as plt
 
 #imagewidth, imageheight, specklewidth, speckleheight, bwbalance, speckle_area = inputvalues() 
 def alternate_pattern_generation(imagewidth, imageheight, specklewidth, speckleheight, bwbalance, save):
+    '''
+    Function that generates a white image and generated random speckles based on the required density of speckles, image and speckle dimensions.
+
+    Parameters:
+    - imagewidth, imageheight (int): width of image, height of image (pixels)
+    - specklewidth, speckleheight (int): width of speckle, height of speckle (pixels)
+    - bwbalance (float): proportion of black to white pixels, used to calculate the number of speckles
+    - save (bool): if True, saves the pattern as a .tiff
+
+    '''
     imagearea = (imagewidth * imageheight)
     specklearea = specklewidth * speckleheight
     required_speckle_density = bwbalance

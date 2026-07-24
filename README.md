@@ -8,7 +8,7 @@ clone the repository and install package:
 ```
 git clone <repository-url>
 cd speckles
-pip install
+python3 -m pip install -e
 ```
 
 ## Structure of package

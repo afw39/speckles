@@ -1,12 +1,15 @@
 #python packaging
 *.egg-info/
 dist/
+build/*
 build/
 *.tiff
+src/speckles_afw39.egg-info
 
 #virtual environment
 venv/
 .venv/
+.venv
 
 #python cache
 __pycache__/

@@ -20,7 +20,7 @@ def generate_pattern(imagewidth, imageheight, speckle_radius, blackwhite, grid, 
     imagesize = imagewidth * imageheight
     speckle_size = np.pi * (speckle_radius**2)
     
-    #calculating speckle spacing/grid sizng
+    #calculating speckle spacing/grid sizing
     number_of_speckles = imagesize * blackwhite / speckle_size
     speckle_spacing = np.sqrt(imagesize / number_of_speckles)
 

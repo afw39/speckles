@@ -34,8 +34,8 @@ def generate_pattern(imagewidth, imageheight, speckle_radius, blackwhite, grid, 
     #rounding my spacing to integer
     speckle_spacing = int(round(speckle_spacing))
     #generating random displacements
-    x_disp = np.random.randint((-1 * speckle_spacing // 2) + 1,(speckle_spacing //2) + 1,size = X.shape)
-    y_disp = np.random.randint((-1 * speckle_spacing // 2) + 1,(speckle_spacing // 2) + 1,size = Y.shape)
+    x_disp = np.random.randint((-1 * speckle_spacing // 2) + 0,(speckle_spacing //2) + 0,size = X.shape)
+    y_disp = np.random.randint((-1 * speckle_spacing // 2) + 0,(speckle_spacing // 2) + 0,size = Y.shape)
     
     #adding my random displacements to each grid point
     X_new = X + x_disp 

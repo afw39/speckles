@@ -33,6 +33,7 @@ def generate_pattern(imagewidth, imageheight, dot_radius, blackwhite, grid, save
 
     #rounding my spacing to integer
     dot_spacing = int(round(dot_spacing))
+    
     #generating random displacements
     x_disp = np.random.randint((-1 * dot_spacing // 2),(dot_spacing // 2), size = X.shape)
     y_disp = np.random.randint((-1 * dot_spacing // 2),(dot_spacing // 2), size = Y.shape)
@@ -75,8 +76,10 @@ def generate_pattern(imagewidth, imageheight, dot_radius, blackwhite, grid, save
                 inside_radius = dist2 <= dot_radius**2
                 coverage = coverage + inside_radius
         coverage = coverage / samples**2
+
         #need it to be greyscale proportional to how much pixel is being covered
         image[ymin:ymax, xmin:xmax] = np.minimum(image[ymin:ymax, xmin:xmax], 1 - coverage)
+
     #flipping every pixel greyscale for the inverted image
     if inverted is True:
         image = 1 - image

@@ -53,5 +53,5 @@ def fftanalysis(image, visualfft):
         plt.ylabel("magnitude")
         plt.savefig("fft_pattern.tiff")
     
-    print(f"Estimated average speckle size is {fft_speckle_size:.2f}")
+    print(f"Estimated average speckle size is {fft_speckle_size:.2f} pixels")
     plt.show()

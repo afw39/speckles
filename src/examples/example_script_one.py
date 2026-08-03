@@ -17,7 +17,7 @@ def main() -> None:
     imageheight = 1000
     dot_radius = 7
     blackwhite = 0.7
-    grid = True
+    grid = False
     save = True
     visualfft = False
     inverted = True

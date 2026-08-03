@@ -20,7 +20,7 @@ def main() -> None:
     grid = False
     save = True
     visualfft = False
-    inverted = False
+    inverted = True
 
     image = generate_pattern(imagewidth, imageheight, dot_radius, blackwhite, grid, save, inverted)
     fftanalysis(image,visualfft)

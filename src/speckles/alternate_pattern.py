@@ -30,7 +30,7 @@ def alternate_pattern_generation(imagewidth, imageheight, specklewidth, speckleh
 
     for i in range(speckle_num):
         image[y_rand[i]:y_rand[i] + speckleheight, x_rand[i]:x_rand[i] + specklewidth] = 0
-    if inverted == True:
+    if inverted is True:
         image = 1 - image
     else:
         image = image

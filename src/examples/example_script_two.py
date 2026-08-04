@@ -19,7 +19,7 @@ def main():
     specklewidth = 10
     bwbalance = 0.7
     save = True
-    inverted = True
+    inverted = False
 
     alternate_pattern_generation(imagewidth, imageheight, specklewidth, speckleheight, bwbalance, save, inverted)
     

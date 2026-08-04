@@ -10,6 +10,7 @@ def main():
     - specklewidth (int) = width of rectangle on speckle pattern in pixels
     - bwbalance (float) = ratio of black pixels to white pixels (~density of black pixels) between 0.0 and 1.0 (1.0 is most black, 0 is all white pixels)
     - save (bool) = determines if speckle patten is saved or not (saved in lossless format of a tiff) 
+    - inverted (bool) = if set to 'True', pattern inverts and produces speckle pattern of white dots on black background.
     '''
 
     #inputs
@@ -19,7 +20,7 @@ def main():
     specklewidth = 10
     bwbalance = 0.7
     save = True
-    inverted = False
+    inverted = True
 
     alternate_pattern_generation(imagewidth, imageheight, specklewidth, speckleheight, bwbalance, save, inverted)
     

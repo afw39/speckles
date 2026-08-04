@@ -40,14 +40,3 @@ def alternate_pattern_generation(imagewidth, imageheight, specklewidth, speckleh
         plt.savefig("alternate_speckle_pattern.tiff")
     plt.show()
     return None
-
-
-
-
-
-
-
-
-
-#howdyen
-#add the inverse ability to this when have time

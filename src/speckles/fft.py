@@ -35,7 +35,7 @@ def fftanalysis(image, visualfft):
     x_magnitude = x_magnitude[positive]
     y_magnitude = y_magnitude[positive]
 
-    #can take an average magnitude as the speckles are circular - no favourtism between x/y
+    #can take an average magnitude 
     avg_magnitude = (x_magnitude + y_magnitude) / 2
     #smoothing out the signal
     avg_magnitude = gaussian_filter1d(avg_magnitude, sigma = 3) 

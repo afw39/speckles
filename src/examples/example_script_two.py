@@ -27,5 +27,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-#maybe need to add the inverted feature to this alternate generation as well! will see if have time to do it, get lloyd to tell me how to code review during our chat on wednesday - maybe a good thing to pull request is the addition of the inversion from experiment to main. 

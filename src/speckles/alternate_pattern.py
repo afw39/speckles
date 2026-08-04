@@ -2,9 +2,7 @@
 import numpy as np 
 import matplotlib.pyplot as plt 
 
-
-#imagewidth, imageheight, specklewidth, speckleheight, bwbalance, speckle_area = inputvalues() 
-def alternate_pattern_generation(imagewidth, imageheight, specklewidth, speckleheight, bwbalance, save):
+def alternate_pattern_generation(imagewidth, imageheight, specklewidth, speckleheight, bwbalance, save, inverted):
     '''
     Function that generates a white image and generated random dots based on the required density of dots on speckle pattern, image and dot dimensions.
 
@@ -32,8 +30,23 @@ def alternate_pattern_generation(imagewidth, imageheight, specklewidth, speckleh
 
     for i in range(speckle_num):
         image[y_rand[i]:y_rand[i] + speckleheight, x_rand[i]:x_rand[i] + specklewidth] = 0
+    if inverted == True:
+        image = 1 - image
+    else:
+        image = image
     plt.imshow(image, cmap = 'gray')
     if save:
         plt.savefig("alternate_speckle_pattern.tiff")
     plt.show()
     return None
+
+
+
+
+
+
+
+
+
+#howdyen
+#add the inverse ability to this when have time

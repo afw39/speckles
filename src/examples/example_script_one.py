@@ -22,7 +22,7 @@ def main() -> None:
     visual_fft = True
     inverted = False
    
-    image = generate_pattern(image_width, image_height, dot_radius, black_white_balance)
+    image = generate_pattern(image_width = 1000, image_height = 1000, dot_radius = 7, black_white_balance = 0.7)
     visualise_pattern(image, save, inverted)
 
     if visual_fft is True:

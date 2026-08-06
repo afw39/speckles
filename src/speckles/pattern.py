@@ -35,7 +35,6 @@ def generate_pattern(image_width: int, image_height:int, dot_radius:int, black_w
     yy, xx = np.meshgrid(np.arange(image_height),np.arange(image_width),indexing = 'ij')
 
     for x, y in zip(x_new.ravel(), y_new.ravel()):
-
         x_min = max(0, int(np.floor(x - dot_radius -1))) 
         x_max = min(image_width, int(np.ceil(x + dot_radius + 1)))
         y_min = max(0, int(np.floor(y - dot_radius -1)))
@@ -47,9 +46,7 @@ def generate_pattern(image_width: int, image_height:int, dot_radius:int, black_w
         grey_scale = np.zeros_like(search_x, dtype = float)
 
         for dx in offsets:
-
             for dy in offsets:
-
                 searching_distance = ((search_x + dx)-x)**2 + ((search_y + dy)-y)**2
                 inside_radius = searching_distance <= dot_radius**2
                 grey_scale = grey_scale + inside_radius

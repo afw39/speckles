@@ -1,10 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def alternate_pattern_generation(image_width: int, image_height: int, speckle_width: int, speckle_height: int, black_white_balance: float, inverted: bool = False) -> np.ndarray:
+def alternate_pattern_generation(image_width: int = 1000, image_height: int = 1000, speckle_width: int = 5, speckle_height: int = 5, black_white_balance: float = 0.5, inverted: bool = False) -> np.ndarray:
     '''
     Function that generates a white image and generated random dots based on the required density of dots on speckle pattern, image and dot dimensions.
-
     Parameters:
     - image_width, imageheight (int): width of image, height of image (pixels)
     - speckle_width, speckleheight (int): dimensions of dots on speckle pattern (pixels)
@@ -21,14 +20,12 @@ def alternate_pattern_generation(image_width: int, image_height: int, speckle_wi
     x_rand = np.random.randint(0,image_height - speckle_width + 1, size = speckle_num)
     y_rand = np.random.randint(0, image_height - speckle_height + 1, size = speckle_num)
 
-   
     image = np.full((image_height, image_width), black_white_balance)
 
     for i in range(speckle_num):
         image[y_rand[i]:y_rand[i] + speckle_height, x_rand[i]:x_rand[i] + speckle_width] = 0
 
     if inverted is True:
-
         image = 1 - image
 
     return image

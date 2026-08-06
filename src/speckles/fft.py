@@ -1,57 +1,55 @@
-#imports
+from scipy.signal import find_peaks
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.fft import fft,fftfreq
-from scipy.ndimage import gaussian_filter1d
-from scipy.signal import find_peaks
 
-def fft_analysis(image, visual_fft):
-
+def fft_analysis(image_height: int, image_width: int, image: np.ndarray):
     '''
-    Function to perform a fast fourier transform analysis of the generated speckle pattern and outputs the estimated average speckle size.
-
-    Parameters:
-    - image (array) = the generated speckle pattern from generated_pattern
-    - visual_fft (bool) = displays and saves the FFT spectrum if set to True
-    
+    Performs fast fourier transform (fft) analysis on the speckle pattern generated in order to determine the average speckle size. Parameters:
+    - image_height, image_width (int) = image dimensiosn
+    - image (array) = speckle pattern generated in `pattern.py`
     '''
-    x_profile = np.mean(image, axis =0)
-    x_profile = x_profile - np.mean(x_profile)
-    x_fft = fft(x_profile)
 
-    #magnitude spectrum
-    x_magnitude = np.abs(x_fft)
-    #same for the y direction
-    y_profile = np.mean(image, axis = 1)
-    y_profile = y_profile - np.mean(y_profile)
-    y_fft = fft(y_profile)
-    y_magnitude = np.abs(y_fft)
+    image_height, image_width = image.shape
+    frequency_y = np.fft.fftshift(np.fft.fftfreq(image_height))
+    frequency_x = np.fft.fftshift(np.fft.fftfreq(image_width))
+    freq_x, freq_y = np.meshgrid(frequency_x, frequency_y)
+    radial_freq = np.sqrt(freq_x**2 + freq_y**2)
+    f_f_t = np.fft.fftshift(np.fft.fft2(image))
+    magnitude = np.abs(f_f_t)
 
-    #frequency axis
-    freq = fftfreq(len(x_profile), d = 1)
+    radial = radial_freq.ravel()
+    mag = magnitude.ravel()
+    mask = radial > 0
+    radial = radial[mask]
+    mag = mag[mask]
 
-    positive = freq > 0
-    freq = freq[positive]
-    x_magnitude = x_magnitude[positive]
-    y_magnitude = y_magnitude[positive]
+    bins = np.linspace(0, radial_freq.max(), 200)
+    radial_mean = np.zeros(len(bins) - 1)
 
-    #can take an average magnitude as the speckles are circular - no favourtism between x/y
-    avg_magnitude = (x_magnitude + y_magnitude) / 2
-    #smoothing out the signal
-    avg_magnitude = gaussian_filter1d(avg_magnitude, sigma = 3)
+    for i in range(len(bins) - 1):
+        mask = (radial >= bins[i]) & (radial < bins[i + 1])
 
-    #finding the correct peak for speckle size
-    peaks, properties = find_peaks(avg_magnitude)
-    fft_speckle_size = 1/(freq[peaks[2]])
+        if np.any(mask):
+            radial_mean[i] = np.mean(mag[mask])
 
-    #to visualise the spectrum
-    if visual_fft:
-        plt.figure()
-        plt.plot(freq, avg_magnitude)
-        plt.axvline(freq[peaks[2]], color = 'black')
-        plt.xlabel("Spatial frequency (cycles per pixel)")
-        plt.ylabel("magnitude")
-        plt.savefig("fft_pattern.tiff")
-    
-    print(f"Estimated average speckle size is {fft_speckle_size:.2f} pixels")
+    bin_centres = 0.5 * (bins[:-1] + bins[1:])
+
+    peaks, _ = find_peaks(radial_mean)
+    peak_idx = peaks[1]
+    peak_freq = bin_centres[peak_idx]
+    average_speckle_size = 1 / peak_freq
+
+    print(f'average speckle size of pattern is {average_speckle_size:.1f} pixels')
+    return bin_centres, radial_mean
+
+def fft_visualisation(bin_centres: np.array, radial_mean: np.array) -> None:
+    ''' 
+    Function to visualise the fft plot, plots `bin_centres` against `radial_mean` to see the peaks 
+    '''
+    plt.figure(figsize = (8,4))
+    plt.plot(bin_centres, np.log1p(radial_mean))
+    plt.xlabel('radial frequency')
+    plt.ylabel('mean fft mag')
+    plt.title('radial fft profile')
+    plt.grid(True)
     plt.show()

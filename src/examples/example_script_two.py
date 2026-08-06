@@ -1,4 +1,5 @@
 from speckles import alternate_pattern_generation
+from speckles import alternate_pattern_visualisation
 
 
 def main():
@@ -12,16 +13,16 @@ def main():
     - save (bool) = determines if speckle patten is saved or not (saved in lossless format of a tiff) 
     '''
 
-    #inputs
     image_height = 1000
     image_width = 1000
-    speckle_height = 10
-    speckle_width = 10
+    speckle_height = 6
+    speckle_width = 7
     black_white_balance = 0.7
-    save = True
+    save = False
     inverted = False
 
-    alternate_pattern_generation(image_width, image_height, speckle_width, speckle_height, black_white_balance, save, inverted)
+    image = alternate_pattern_generation(image_width, image_height, speckle_width, speckle_height, black_white_balance, inverted)
+    alternate_pattern_visualisation(image, image_width, image_height, save)
     
 
 if __name__ == '__main__':

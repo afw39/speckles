@@ -13,8 +13,9 @@ class Image:
         dot_radius (float): radius of dots on speckle pattern
         black_white_balance (float): measure of ratio of white pixels to black pixels on pattern
         inverted (bool): determines if image inverts greyscale or not
+        contrast (float): the contrast of the image (1.0 for highest, 0 for all black image - no contrast)
         filename (str): name that the pattern is saved under
-        bits (int): how many bits to encode the saved pattern
+        bits (int): how many bits to encode the saved pattern (8-bit, 10-bit, 12-bit, 16-bit)
         save (bool): whether the pattern is saved or not
     
     Methods:
@@ -22,6 +23,7 @@ class Image:
         displaced_grid(): generates random displacements and applies to uniform grid to achieve dot locations
         image_creation(): creates the image and fills in the dots
         visualise_pattern(inverted: bool): inverts the image
+        contrast(contrast: float): adjusts the contrast of the image
         bit_depth_tiff(filename: str, bits: int, save: bool): saves the image as user requests
     '''
 
@@ -47,10 +49,7 @@ class Image:
         image_size = self.image_width * self.image_height
         dot_size = np.pi*(self.dot_radius**2)
         number_of_dots = image_size*self.black_white_balance/dot_size
-        self.dot_spacing = np.sqrt(image_size/number_of_dots)
-
-        return None
-    
+        self.dot_spacing = np.sqrt(image_size/number_of_dots)   
 
     def displaced_grid(self) -> None:
         '''
@@ -69,8 +68,6 @@ class Image:
 
         self.x_new = x+x_displacements
         self.y_new = y+y_displacements
-
-        return None
     
 
     def image_creation(self) -> None:
@@ -107,7 +104,18 @@ class Image:
             grey_scale = grey_scale / samples**2
 
             self.image[y_min:y_max, x_min:x_max] = np.minimum(self.image[y_min:y_max, x_min:x_max], 1-grey_scale)
-        return None
+
+    def contrast(self, contrast: float = 1) -> None:
+        '''
+        Mulitplies the whole image by a user specified mean contrast - value of 0 is minumu contrast (all black), value of 1.0 is max contrast
+        Args:
+            contrast (float): the contrast of the image
+        Returns: 
+            None
+        '''
+
+        self.image = self.image*contrast
+
 
     def visualise_pattern(self, inverted: bool = False) -> np.ndarray:
         '''
@@ -125,12 +133,12 @@ class Image:
         return self.image
 
 
-    def bit_depth_tiff(self, filename: str, bits: int, save: bool = True) -> None:
+    def bit_depth_tiff(self, filename: str, bits: int = 8, save: bool = True) -> None:
         '''
         saves the image as user requests
         Args:
             filename (str): name that the file is saved under
-            bits (int): number of bits that encode the saved image
+            bits (int): number of bits that encode the saved image (8-bit, 10-bit, 12-bit, 16-bit)
             save (bool): determines if the image is saved
         Returns:
             None
@@ -148,7 +156,4 @@ class Image:
             out = (out*max_val).round().astype(dtype)
 
             tifffile.imwrite(filename, out)
-
-
-        return None
 

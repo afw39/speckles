@@ -14,9 +14,9 @@ def main():
     '''
 
     image_height = 1000
-    image_width = 1000
+    image_width = 1500
     speckle_height = 6
-    speckle_width = 7
+    speckle_width = 7.6
     black_white_balance = 0.7
 
     image = alternate_pattern_generation(image_width, image_height, speckle_width, speckle_height, black_white_balance, inverted = False)

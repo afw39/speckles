@@ -17,19 +17,29 @@ def alternate_pattern_generation(image_width: int, image_height: int, speckle_wi
     required_speckle_density = black_white_balance
     speckle_num = int(required_speckle_density*(image_area/speckle_area))
 
-    # generate random coordinates
-    x_rand = np.random.randint(0,image_height-speckle_width+1, size = speckle_num)
-    y_rand = np.random.randint(0, image_height-speckle_height+1, size = speckle_num)
+    # generate random coordinates (generating random float points?)
+    x_random = np.random.uniform(0,image_width-speckle_width+1, size = speckle_num)
+    y_random = np.random.uniform(0, image_height-speckle_height+1, size = speckle_num)
 
-    #generate image and plot speckles
-    image = np.full((image_height, image_width), black_white_balance)
-    for i in range(speckle_num):
-        image[y_rand[i]:y_rand[i]+speckle_height, x_rand[i]:x_rand[i]+speckle_width] = 0
+    image = np.full((image_height, image_width), 1.0)
+
+    for x, y in zip(x_random.ravel(), y_random.ravel()):
+
+        x_min = max(0, int(np.floor(x-speckle_width-1)))
+        x_max = min(image_width, int(np.ceil(x+speckle_width+1)))
+        y_min = max(0, int(np.floor(y-speckle_height-1)))
+        y_max = min(image_height, int(np.ceil(y+speckle_height+1)))
+
+        for x in range(x_min,x_max):
+            for y in range(y_min, y_max):
+                image[y, x] = 0
 
     if inverted:
         image = 1-image
 
     return image
+
+
 
 def alternate_pattern_visualisation(pattern: np.ndarray, image_width: int, image_height: int, save: bool = False) -> None:
     '''

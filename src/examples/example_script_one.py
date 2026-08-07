@@ -1,5 +1,4 @@
-import matplotlib.pyplot as plt
-from speckles import generate_pattern, visualise_pattern, fft_analysis, fft_visualisation
+from speckles import Image
 
 def main() -> None:
     '''
@@ -14,16 +13,19 @@ def main() -> None:
     - inverted (bool) = set to True to change pattern to be black image with white dots (False for white image with black dots)
     '''
 
-    image_width = 1000
-    image_height = 1000
-    dot_radius = 7
-    black_white_balance = 0.7
-   
-    image = generate_pattern(image_width, image_height, dot_radius, black_white_balance)
-    visualise_pattern(image, save = True, inverted = False)
-    
-    fft_analysis(image_height, image_width, image, visual_fft = False)
-    plt.show()
+    # generate pattern and input parameters
+    pattern = Image(image_width=1000, image_height=1000, dot_radius=5.5, black_white_balance=0.5)
+    pattern.dots_number()
+    pattern.displaced_grid()
+    pattern.image_creation()
+
+    # for visualising/inverting the image
+    pattern.visualise_pattern(inverted=False)
+
+    #for saving the pattern
+    #pattern.bit_depth_tiff(filename= ,bits= ,save=True)
+
+
 
 if __name__ == '__main__':
     main()

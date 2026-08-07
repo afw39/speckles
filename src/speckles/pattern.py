@@ -1,5 +1,9 @@
+import sys
 import numpy as np
+import tifffile
 import matplotlib.pyplot as plt
+sys.path.append('../../../')
+
 
 def generate_pattern(image_width: int, image_height: int, dot_radius: float, black_white_balance: float) -> np.ndarray:
     '''
@@ -23,22 +27,21 @@ def generate_pattern(image_width: int, image_height: int, dot_radius: float, bla
     x_coords = np.arange(0, image_width, dot_spacing)
     y_coords = np.arange(0, image_height, dot_spacing)
     x, y = np.meshgrid(x_coords, y_coords)
-    dot_spacing = int(round(dot_spacing))
-    x_displacements = np.random.randint((-1*dot_spacing//2),(dot_spacing//2), size = x.shape)
-    y_displacements = np.random.randint((-1 * dot_spacing//2),(dot_spacing//2), size = y.shape)
+    x_displacements = np.random.uniform((-1*dot_spacing//2),(dot_spacing//2), size = x.shape)
+    y_displacements = np.random.uniform((-1*dot_spacing//2),(dot_spacing//2), size = y.shape)
     x_new = x+x_displacements
     y_new = y+y_displacements
 
     #create image
     image = np.full((image_height, image_width), 1.0)
-    samples = 4
+    samples = 8
     offsets = (np.arange(samples)+0.5)/samples-0.5
     yy, xx = np.meshgrid(np.arange(image_height),np.arange(image_width),indexing = 'ij')
 
     # color in dots
     for x, y in zip(x_new.ravel(), y_new.ravel()):
         x_min = max(0, int(np.floor(x-dot_radius-1))) 
-        x_max = min(image_width, int(np.ceil(x + dot_radius+1)))
+        x_max = min(image_width, int(np.ceil(x+dot_radius+1)))
         y_min = max(0, int(np.floor(y-dot_radius-1)))
         y_max = min(image_height, int(np.ceil(y+dot_radius+1)))
 
@@ -60,7 +63,7 @@ def generate_pattern(image_width: int, image_height: int, dot_radius: float, bla
     return image
 
 
-def visualise_pattern(pattern: np.ndarray,save: bool = True, inverted: bool = False) -> None:
+def visualise_pattern(pattern: np.ndarray, inverted: bool = False) -> None:
     ''' 
     Visualises the pattern generated in the function `generate_pattern`. Parameters:
     - pattern (array) = image generated in function above 
@@ -73,5 +76,17 @@ def visualise_pattern(pattern: np.ndarray,save: bool = True, inverted: bool = Fa
 
     plt.imshow(pattern, cmap = 'gray', vmin = 0, vmax = 1)
 
+
+def save_tiff_bitdepth(img: np.ndarray, filename: str, bits: int, save: bool = True) -> None:
+    ''' docstring'''
     if save:
-        plt.savefig('new_speckle_pattern.tiff')
+        max_val = (1 << bits) - 1
+        if bits <= 8:
+            dtype = np.uint8
+        else:
+            dtype = np.uint16
+
+        out = np.clip(img, 0, 1)
+        out = (out*max_val).round().astype(dtype)
+
+        tifffile.imwrite(filename, out)

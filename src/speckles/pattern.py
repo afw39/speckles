@@ -45,7 +45,7 @@ class Image:
         return None
     
 
-    def image_creation(self) -> np.ndarray:
+    def image_creation(self) -> None:
         '''docstring'''
         print(f'generating {self.image_width} x {self.image_height}')
         self.image = np.full((self.image_height, self.image_width), 1.0)
@@ -73,17 +73,16 @@ class Image:
             grey_scale = grey_scale / samples**2
 
             self.image[y_min:y_max, x_min:x_max] = np.minimum(self.image[y_min:y_max, x_min:x_max], 1-grey_scale)
+        return None
 
-        return self.image
-
-    def visualise_pattern(self, inverted: bool = False) -> None:
+    def visualise_pattern(self, inverted: bool = False) -> np.ndarray:
         '''docstring'''
 
         if inverted:
             self.image = 1 - self.image
 
         plt.imshow(self.image, cmap = 'gray', vmin = 0, vmax = 1)
-        return None
+        return self.image
 
 
     def bit_depth_tiff(self, filename: str, bits: int, save: bool = True) -> None:
@@ -102,7 +101,6 @@ class Image:
 
             tifffile.imwrite(filename, out)
 
-        plt.show()
 
         return None
 

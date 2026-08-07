@@ -1,4 +1,4 @@
-from speckles import Image
+from speckles import Image, FFT_Analysis
 
 def main() -> None:
     '''
@@ -13,17 +13,28 @@ def main() -> None:
     - inverted (bool) = set to True to change pattern to be black image with white dots (False for white image with black dots)
     '''
 
+    #enter image dimensions
+    image_height = 1000
+    image_width = 1000
+
     # generate pattern and input parameters
-    pattern = Image(image_width=1000, image_height=1000, dot_radius=5.5, black_white_balance=0.5)
+    pattern = Image(image_width, image_height, dot_radius=5.5, black_white_balance=0.5)
     pattern.dots_number()
     pattern.displaced_grid()
     pattern.image_creation()
 
     # for visualising/inverting the image
-    pattern.visualise_pattern(inverted=False)
+    speckle_pattern = pattern.visualise_pattern(inverted=False)
 
     # for saving the pattern
     pattern.bit_depth_tiff(filename= 'speckle_pattern.tiff',bits= 7,save=True)
+
+    #for the fft
+    fft = FFT_Analysis(speckle_pattern, image_width, image_height)
+    fft.fft_analysis()
+
+    # to visualise the fft
+    fft.visual_fft(visual_fft=False)
 
 
 

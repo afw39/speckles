@@ -1,4 +1,4 @@
 from .pattern import Image
 from .alternate_pattern import OtherPattern
-from .fft import fft_analysis, fft_visualisation
+from .fft_class import FFT_Analysis
 

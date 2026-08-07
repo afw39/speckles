@@ -61,20 +61,20 @@ class Image:
             y_min = max(0, int(np.floor(y-self.dot_radius-1)))
             y_max = min(self.image_height, int(np.ceil(y+self.dot_radius+1)))
 
-        search_x = xx[y_min:y_max, x_min:x_max]
-        search_y = yy[y_min:y_max, x_min:x_max]
+            search_x = xx[y_min:y_max, x_min:x_max]
+            search_y = yy[y_min:y_max, x_min:x_max]
 
-        grey_scale = np.zeros_like(search_x, dtype = float)
+            grey_scale = np.zeros_like(search_x, dtype = float)
 
-        for dx in offsets:
-            for dy in offsets:
-                searching_distance = ((search_x+dx)-x)**2 + ((search_y+dy)-y)**2
-                inside_radius = searching_distance <= self.dot_radius**2
-                grey_scale = grey_scale+inside_radius
+            for dx in offsets:
+                for dy in offsets:
+                    searching_distance = ((search_x+dx)-x)**2 + ((search_y+dy)-y)**2
+                    inside_radius = searching_distance <= self.dot_radius**2
+                    grey_scale = grey_scale+inside_radius
 
-        grey_scale = grey_scale / samples**2
+            grey_scale = grey_scale / samples**2
 
-        self.image[y_min:y_max, x_min:x_max] = np.minimum(self.image[y_min:y_max, x_min:x_max], 1-grey_scale)
+            self.image[y_min:y_max, x_min:x_max] = np.minimum(self.image[y_min:y_max, x_min:x_max], 1-grey_scale)
 
         return self.image
 
@@ -109,5 +109,3 @@ class Image:
 
         return None
 
-
-image = 

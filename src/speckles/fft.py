@@ -2,7 +2,7 @@ from scipy.signal import find_peaks
 import numpy as np
 import matplotlib.pyplot as plt
 
-def fft_analysis(image_height: int, image_width: int, image: np.ndarray):
+def fft_analysis(image_height: int, image_width: int, image: np.ndarray, visual_fft: bool = False) -> None:
     '''
     Performs fast fourier transform (fft) analysis on the speckle pattern generated in order to determine the average speckle size. Parameters:
     - image_height, image_width (int) = image dimensiosn
@@ -40,12 +40,17 @@ def fft_analysis(image_height: int, image_width: int, image: np.ndarray):
     average_speckle_size = 1 / peak_freq
 
     print(f'average speckle size of pattern is {average_speckle_size:.1f} pixels')
-    return bin_centres, radial_mean
+
+    if visual_fft:
+        fft_visualisation(bin_centres, radial_mean)
+    else:
+        plt.show()
+
 
 def fft_visualisation(bin_centres: np.array, radial_mean: np.array) -> None:
-    ''' 
-    Function to visualise the fft plot, plots `bin_centres` against `radial_mean` to see the peaks 
-    '''
+    ''' Function to visualise the fft plot, plots `bin_centres` against `radial_mean` to see the peaks '''
+
+    # plotting the fft
     plt.figure(figsize = (8,4))
     plt.plot(bin_centres, np.log1p(radial_mean))
     plt.xlabel('radial frequency')

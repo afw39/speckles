@@ -18,11 +18,9 @@ def main():
     speckle_height = 6
     speckle_width = 7
     black_white_balance = 0.7
-    save = False
-    inverted = False
 
-    image = alternate_pattern_generation(image_width, image_height, speckle_width, speckle_height, black_white_balance, inverted)
-    alternate_pattern_visualisation(image, image_width, image_height, save)
+    image = alternate_pattern_generation(image_width, image_height, speckle_width, speckle_height, black_white_balance, inverted = False)
+    alternate_pattern_visualisation(image, image_width, image_height, save = False)
     
 
 if __name__ == '__main__':

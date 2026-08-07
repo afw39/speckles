@@ -18,19 +18,12 @@ def main() -> None:
     image_height = 1000
     dot_radius = 7
     black_white_balance = 0.7
-    save = True
-    visual_fft = True
-    inverted = False
    
-    image = generate_pattern(image_width = 1000, image_height = 1000, dot_radius = 7, black_white_balance = 0.7)
-    visualise_pattern(image, save, inverted)
-
-    if visual_fft is True:
-        bin_centres, radial_mean = fft_analysis(image_height, image_width, image)
-        fft_visualisation(bin_centres, radial_mean)
-    else:
-        fft_analysis(image_height, image_width, image)
-        plt.show()
+    image = generate_pattern(image_width, image_height, dot_radius, black_white_balance)
+    visualise_pattern(image, save = True, inverted = False)
+    
+    fft_analysis(image_height, image_width, image, visual_fft = False)
+    plt.show()
 
 if __name__ == '__main__':
     main()

@@ -3,11 +3,33 @@ import matplotlib.pyplot as plt
 import tifffile
 
 class OtherPattern:
-    '''doc'''
+    ''' 
+    Class that generates speckle pattern by generating random coordinates on a white image.
 
-    def __init__(self, image_width, image_height, speckle_width, speckle_height, black_white_balance) -> None:
-        '''doc'''
+    Attributes:
+        image_width, image_height (int) = image dimensions (pixels)
+        speckle_width, speckleheight (int): dimensions of dots on speckle pattern (pixels)
+        black_white_balance (float): proportion of black to white pixels
+        inverted (bool): if True, generates an inverted image
+        save (bool): if True, saves the pattern as a .tiff
+        filename (str): the name that the pattern is saved as
+        bits (int): how many bits make up the image (8-bit, 10-bit, 12-bit or 16-bit)
 
+    Methods:
+        number-of_dots() -> None:
+            calculates the number of speckles required on pattern using the speckle/image dimensions
+
+        pattern() -> np.ndarray:
+            generates the random locations of the centre of the dots and fills any pixels within the dots in
+
+        inverted(inverted: bool) -> None
+            inverts the speckle pattern if inverted = True
+
+        visualisation(filename: str, bits: 256, save: bool) -> None:
+            plots the speckle pattern, saves as a user defined filename and bit number. 
+    '''
+
+    def __init__(self, image_width: int, image_height: int, speckle_width: float, speckle_height: float, black_white_balance: float=0.5) -> None:
         self.image_width = image_width
         self.image_height = image_height
         self.speckle_width = speckle_width
@@ -18,14 +40,26 @@ class OtherPattern:
 
 
     def number_of_dots(self) -> None:
-        '''doc'''
+        '''
+        Calculates the number of speckles required on pattern using the speckle/image dimensions
+        Args: 
+            None
+        Returns: 
+            None
+        '''
         image_area = (self.image_height*self.image_width)
         speckle_area = (self.speckle_height*self.speckle_width)
         required_speckle_density = self.black_white_balance
         self.speckle_number = int(required_speckle_density*(image_area/speckle_area))
 
     def pattern(self) -> np.ndarray:
-        '''gdgdg '''
+        '''
+        Generates the random locations of the centre of the dots and fills any pixels within the dots in 
+        Args: 
+            None
+        Returns: 
+            np.ndarray: speckle pattern
+        '''
         x_random = np.random.uniform(0, self.image_width-self.speckle_width+1, size = self.speckle_number)
         y_random = np.random.uniform(0, self.image_height-self.speckle_height+1, size = self.speckle_number)
 
@@ -44,14 +78,28 @@ class OtherPattern:
         return self.image
 
     def inverted(self, inverted: bool = False) -> np.ndarray:
-        '''docstring'''
+        '''
+        Inverts speckle pattern
+        Args: 
+            inverted (bool): whether to invert the speckle pattern or not
+        Returns:
+            np.ndarray: speckle pattern 
+        '''
         if inverted:
             self.image = 1 - self.image
 
         return self.image
 
     def visualisation(self, filename: str, bits: int, save: bool = True) -> None:
-        ''' docstring'''
+        ''' 
+        visualising the speckle pattern
+        Args: 
+            filename (str): name that the pattern gets saved under
+            bits (int): bit depth that the image is saved with
+            save (bool): whether the image is saved or not
+        Returns: 
+            None
+        '''
 
         plt.xlim(0, self.image_width)
         plt.ylim(0, self.image_height)

@@ -5,11 +5,27 @@ import matplotlib.pyplot as plt
 
 
 class Image:
-    ''' doctsring for class - generates pattern ig'''
+    '''
+    Generates speckle pattern
+
+    Attributes
+        image_height, image_width (int): image dimensions (pix)
+        dot_radius (float): radius of dots on speckle pattern
+        black_white_balance (float): measure of ratio of white pixels to black pixels on pattern
+        inverted (bool): determines if image inverts greyscale or not
+        filename (str): name that the pattern is saved under
+        bits (int): how many bits to encode the saved pattern
+        save (bool): whether the pattern is saved or not
+    
+    Methods:
+        dots_number(): calculates how many dots required on speckle pattern to achieve correct black_white_balance
+        displaced_grid(): generates random displacements and applies to uniform grid to achieve dot locations
+        image_creation(): creates the image and fills in the dots
+        visualise_pattern(inverted: bool): inverts the image
+        bit_depth_tiff(filename: str, bits: int, save: bool): saves the image as user requests
+    '''
 
     def __init__(self, image_width: int, image_height: int, dot_radius: float, black_white_balance: float):
-        '''doctsirng -parameters'''
-
         self.image_width = image_width
         self.image_height = image_height
         self.dot_radius = dot_radius
@@ -21,7 +37,13 @@ class Image:
 
 
     def dots_number(self) -> None:
-        '''docstring'''
+        '''
+        calculates how many dots required on speckle pattern to achieve correct black_white_balance
+        Args:
+            None
+        Returns:
+            None
+        '''
         image_size = self.image_width * self.image_height
         dot_size = np.pi*(self.dot_radius**2)
         number_of_dots = image_size*self.black_white_balance/dot_size
@@ -31,7 +53,13 @@ class Image:
     
 
     def displaced_grid(self) -> None:
-        '''docstring'''
+        '''
+        generates random displacements and applies to uniform grid to achieve dot locations
+        Args:
+            None
+        Returns:
+            None
+        '''
         x_coords = np.arange(0, self.image_width, self.dot_spacing)
         y_coords = np.arange(0, self.image_height, self.dot_spacing)
         x, y = np.meshgrid(x_coords, y_coords)
@@ -46,7 +74,13 @@ class Image:
     
 
     def image_creation(self) -> None:
-        '''docstring'''
+        '''
+        creates the image and fills in the dots
+        Args;
+            None
+        Returns:
+            None
+        '''
         print(f'generating {self.image_width} x {self.image_height}')
         self.image = np.full((self.image_height, self.image_width), 1.0)
         samples = 8
@@ -76,7 +110,13 @@ class Image:
         return None
 
     def visualise_pattern(self, inverted: bool = False) -> np.ndarray:
-        '''docstring'''
+        '''
+        inverts the image
+        Args:
+            inverted (bool): if True, greyscale values for whole image invert
+        Returns:
+            np.ndarray: speckle pattern
+        '''
 
         if inverted:
             self.image = 1 - self.image
@@ -86,7 +126,15 @@ class Image:
 
 
     def bit_depth_tiff(self, filename: str, bits: int, save: bool = True) -> None:
-        '''docstring'''
+        '''
+        saves the image as user requests
+        Args:
+            filename (str): name that the file is saved under
+            bits (int): number of bits that encode the saved image
+            save (bool): determines if the image is saved
+        Returns:
+            None
+        '''
 
         if save:
             max_val = (1 << bits)-1

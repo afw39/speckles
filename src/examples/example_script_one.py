@@ -1,4 +1,4 @@
-from speckles import Image, FFT_Analysis
+from speckles import Image, FFTAnalysis
 
 def main() -> None:
     '''
@@ -30,12 +30,11 @@ def main() -> None:
     pattern.bit_depth_tiff(filename= 'speckle_pattern.tiff',bits= 7,save=True)
 
     #for the fft
-    fft = FFT_Analysis(speckle_pattern, image_width, image_height)
+    fft = FFTAnalysis(speckle_pattern, image_width, image_height)
     fft.fft_analysis()
 
     # to visualise the fft
     fft.visual_fft(visual_fft=False)
-
 
 
 if __name__ == '__main__':

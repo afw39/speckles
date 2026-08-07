@@ -22,8 +22,8 @@ def main() -> None:
     # for visualising/inverting the image
     pattern.visualise_pattern(inverted=False)
 
-    #for saving the pattern
-    #pattern.bit_depth_tiff(filename= ,bits= ,save=True)
+    # for saving the pattern
+    pattern.bit_depth_tiff(filename= 'speckle_pattern.tiff',bits= 7,save=True)
 
 
 

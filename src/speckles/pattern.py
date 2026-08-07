@@ -1,92 +1,108 @@
-import sys
 import numpy as np
 import tifffile
 import matplotlib.pyplot as plt
-sys.path.append('../../../')
 
 
-def generate_pattern(image_width: int, image_height: int, dot_radius: float, black_white_balance: float) -> np.ndarray:
-    '''
-    Generates a random speckle pattern based on random displacements from a uniform grid. 
-    Displaces midpoints of speckles and fills in any pixels within that radius. 
-    Parameters:
-    - image_width, image_height (int) = image dimensions (pixels)
-    - dot_radius (int) = radius of dots on speckle pattern (pixels)
-    - black_white_balance (float) = proportion of black:white pixels (0.0 is completely white, 1.0 is completely black)
-    '''
 
-    print(f"generating {image_width} x {image_height}")
+class Image:
+    ''' doctsring for class - generates pattern ig'''
 
-    # calculate number of speckles
-    image_size = image_width*image_height
-    dot_size = np.pi*(dot_radius**2)
-    number_of_dots = image_size*black_white_balance/dot_size
-    dot_spacing = np.sqrt(image_size/number_of_dots)
+    def __init__(self, image_width: int, image_height: int, dot_radius: float, black_white_balance: float):
+        '''doctsirng -parameters'''
 
-    # generate displaced grid points
-    x_coords = np.arange(0, image_width, dot_spacing)
-    y_coords = np.arange(0, image_height, dot_spacing)
-    x, y = np.meshgrid(x_coords, y_coords)
-    x_displacements = np.random.uniform((-1*dot_spacing//2),(dot_spacing//2), size = x.shape)
-    y_displacements = np.random.uniform((-1*dot_spacing//2),(dot_spacing//2), size = y.shape)
-    x_new = x+x_displacements
-    y_new = y+y_displacements
-
-    #create image
-    image = np.full((image_height, image_width), 1.0)
-    samples = 8
-    offsets = (np.arange(samples)+0.5)/samples-0.5
-    yy, xx = np.meshgrid(np.arange(image_height),np.arange(image_width),indexing = 'ij')
-
-    # color in dots
-    for x, y in zip(x_new.ravel(), y_new.ravel()):
-        x_min = max(0, int(np.floor(x-dot_radius-1))) 
-        x_max = min(image_width, int(np.ceil(x+dot_radius+1)))
-        y_min = max(0, int(np.floor(y-dot_radius-1)))
-        y_max = min(image_height, int(np.ceil(y+dot_radius+1)))
-
-        search_x = xx[y_min:y_max, x_min:x_max]
-        search_y = yy[y_min:y_max, x_min:x_max]
-
-        grey_scale = np.zeros_like(search_x, dtype = float)
-
-        for dx in offsets:
-            for dy in offsets:
-                searching_distance = ((search_x+dx)-x)**2 + ((search_y+dy)-y)**2
-                inside_radius = searching_distance <= dot_radius**2
-                grey_scale = grey_scale+inside_radius
-
-        grey_scale = grey_scale / samples**2
-
-        image[y_min:y_max, x_min:x_max] = np.minimum(image[y_min:y_max, x_min:x_max], 1-grey_scale)
-
-    return image
+        self.image_width = image_width
+        self.image_height = image_height
+        self.dot_radius = dot_radius
+        self.black_white_balance = black_white_balance
+        self.x_new = None
+        self.y_new = None
+        self.dot_spacing = None
+        self.image = None
 
 
-def visualise_pattern(pattern: np.ndarray, inverted: bool = False) -> None:
-    ''' 
-    Visualises the pattern generated in the function `generate_pattern`. Parameters:
-    - pattern (array) = image generated in function above 
-    - save (bool) = set to True to save the pattern as a .tiff
-    - inverted (bool) = set to True to invert the greyscale (have white dots on a black background)
-    '''
+    def dots_number(self) -> None:
+        '''docstring'''
+        image_size = self.image_width * self.image_height
+        dot_size = np.pi*(self.dot_radius**2)
+        number_of_dots = image_size*self.black_white_balance/dot_size
+        self.dot_spacing = np.sqrt(image_size/number_of_dots)
 
-    if inverted:
-        pattern = 1-pattern
+        return None
+    
 
-    plt.imshow(pattern, cmap = 'gray', vmin = 0, vmax = 1)
+    def displaced_grid(self) -> None:
+        '''docstring'''
+        x_coords = np.arange(0, self.image_width, self.dot_spacing)
+        y_coords = np.arange(0, self.image_height, self.dot_spacing)
+        x, y = np.meshgrid(x_coords, y_coords)
+
+        x_displacements = np.random.uniform((-1*self.dot_spacing//2),(self.dot_spacing//2), size = x.shape)
+        y_displacements = np.random.uniform((-1*self.dot_spacing//2),(self.dot_spacing//2), size = y.shape)
+
+        self.x_new = x+x_displacements
+        self.y_new = y+y_displacements
+
+        return None
+    
+
+    def image_creation(self) -> np.ndarray:
+        '''docstring'''
+        print(f'generating {self.image_width} x {self.image_height}')
+        self.image = np.full((self.image_height, self.image_width), 1.0)
+        samples = 8
+        offsets = (np.arange(samples)+0.5)/samples-0.5
+        yy, xx = np.meshgrid(np.arange(self.image_height), np.arange(self.image_width), indexing = 'ij')
+
+        for x, y in zip(self.x_new.ravel(), self.y_new.ravel()):
+            x_min = max(0, int(np.floor(x-self.dot_radius-1))) 
+            x_max = min(self.image_width, int(np.ceil(x+self.dot_radius+1)))
+            y_min = max(0, int(np.floor(y-self.dot_radius-1)))
+            y_max = min(self.image_height, int(np.ceil(y+self.dot_radius+1)))
+
+            search_x = xx[y_min:y_max, x_min:x_max]
+            search_y = yy[y_min:y_max, x_min:x_max]
+
+            grey_scale = np.zeros_like(search_x, dtype = float)
+
+            for dx in offsets:
+                for dy in offsets:
+                    searching_distance = ((search_x+dx)-x)**2 + ((search_y+dy)-y)**2
+                    inside_radius = searching_distance <= self.dot_radius**2
+                    grey_scale = grey_scale+inside_radius
+
+            grey_scale = grey_scale / samples**2
+
+            self.image[y_min:y_max, x_min:x_max] = np.minimum(self.image[y_min:y_max, x_min:x_max], 1-grey_scale)
+
+        return self.image
+
+    def visualise_pattern(self, inverted: bool = False) -> None:
+        '''docstring'''
+
+        if inverted:
+            self.image = 1 - self.image
+
+        plt.imshow(self.image, cmap = 'gray', vmin = 0, vmax = 1)
+        return None
 
 
-def save_tiff_bitdepth(img: np.ndarray, filename: str, bits: int, save: bool = True) -> None:
-    ''' docstring'''
-    if save:
-        max_val = (1 << bits) - 1
-        if bits <= 8:
-            dtype = np.uint8
-        else:
-            dtype = np.uint16
+    def bit_depth_tiff(self, filename: str, bits: int, save: bool = True) -> None:
+        '''docstring'''
 
-        out = np.clip(img, 0, 1)
-        out = (out*max_val).round().astype(dtype)
+        if save:
+            max_val = (1 << bits)-1
 
-        tifffile.imwrite(filename, out)
+            if bits <= 8:
+                dtype = np.uint8
+            else:
+                dtype = np.uint16
+
+            out = np.clip(self.image, 0, 1)
+            out = (out*max_val).round().astype(dtype)
+
+            tifffile.imwrite(filename, out)
+
+        plt.show()
+
+        return None
+

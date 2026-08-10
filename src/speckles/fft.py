@@ -89,6 +89,4 @@ class FFTAnalysis():
             plt.grid(True)
 
         plt.show()
-        return None
-            
-        
+        return None    

@@ -1,10 +1,9 @@
 import numpy as np
-import tifffile
-import matplotlib.pyplot as plt
+from .grid import dots_number, displaced_grid
 
 
 
-class Image:
+class Pattern:
     '''
     Generates speckle pattern
 
@@ -31,49 +30,19 @@ class Image:
         self.image_width = image_width
         self.image_height = image_height
         self.dot_radius = dot_radius
-        self.black_white_balance = black_white_balance
+        self.black_white_balance = 1-black_white_balance
         self.x_new = None
         self.y_new = None
         self.dot_spacing = None
         self.image = None
 
+        self.dot_spacing = dots_number(image_width, image_height, dot_radius, black_white_balance)
+        self.x_new, self.y_new = displaced_grid(image_width, image_height, self.dot_spacing)
 
-    def dots_number(self) -> None:
-        '''
-        calculates how many dots required on speckle pattern to achieve correct black_white_balance
-        Args:
-            None
-        Returns:
-            None
-        '''
-        image_size = self.image_width * self.image_height
-        dot_size = np.pi*(self.dot_radius**2)
-        number_of_dots = image_size*self.black_white_balance/dot_size
-        self.dot_spacing = np.sqrt(image_size/number_of_dots)   
-
-    def displaced_grid(self) -> None:
-        '''
-        generates random displacements and applies to uniform grid to achieve dot locations
-        Args:
-            None
-        Returns:
-            None
-        '''
-        x_coords = np.arange(0, self.image_width, self.dot_spacing)
-        y_coords = np.arange(0, self.image_height, self.dot_spacing)
-        x, y = np.meshgrid(x_coords, y_coords)
-
-        x_displacements = np.random.uniform((-1*self.dot_spacing//2),(self.dot_spacing//2), size = x.shape)
-        y_displacements = np.random.uniform((-1*self.dot_spacing//2),(self.dot_spacing//2), size = y.shape)
-
-        self.x_new = x+x_displacements
-        self.y_new = y+y_displacements
-    
-
-    def image_creation(self) -> None:
+    def pattern_generation(self) -> np.ndarray:
         '''
         creates the image and fills in the dots
-        Args;
+        Args:
             None
         Returns:
             None
@@ -104,56 +73,4 @@ class Image:
             grey_scale = grey_scale / samples**2
 
             self.image[y_min:y_max, x_min:x_max] = np.minimum(self.image[y_min:y_max, x_min:x_max], 1-grey_scale)
-
-    def contrast(self, contrast: float = 1) -> None:
-        '''
-        Mulitplies the whole image by a user specified mean contrast - value of 0 is minumu contrast (all black), value of 1.0 is max contrast
-        Args:
-            contrast (float): the contrast of the image
-        Returns: 
-            None
-        '''
-
-        self.image = self.image*contrast
-
-
-    def visualise_pattern(self, inverted: bool = False) -> np.ndarray:
-        '''
-        inverts the image
-        Args:
-            inverted (bool): if True, greyscale values for whole image invert
-        Returns:
-            np.ndarray: speckle pattern
-        '''
-
-        if inverted:
-            self.image = 1 - self.image
-
-        plt.imshow(self.image, cmap = 'gray', vmin = 0, vmax = 1)
-        return self.image
-
-
-    def bit_depth_tiff(self, filename: str, bits: int = 8, save: bool = True) -> None:
-        '''
-        saves the image as user requests
-        Args:
-            filename (str): name that the file is saved under
-            bits (int): number of bits that encode the saved image (8-bit, 10-bit, 12-bit, 16-bit)
-            save (bool): determines if the image is saved
-        Returns:
-            None
-        '''
-
-        if save:
-            max_val = (1 << bits)-1
-
-            if bits <= 8:
-                dtype = np.uint8
-            else:
-                dtype = np.uint16
-
-            out = np.clip(self.image, 0, 1)
-            out = (out*max_val).round().astype(dtype)
-
-            tifffile.imwrite(filename, out)
-
+            return self.image

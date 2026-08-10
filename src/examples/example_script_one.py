@@ -4,14 +4,19 @@ image_width = 1000
 image_height = 1000
 
 # generate pattern and input parameters
-pattern = Pattern(image_width, image_height, dot_radius=5.5, black_white_balance=0.2)
+pattern = Pattern(image_width, image_height, dot_radius=5.5, black_white_balance=0.4)
+speckle_pattern = pattern.pattern_generation()
+image = ImageGeneration(speckle_pattern, image_intensity=0.5)
 
-# this should save the speckle pattern under 'speckle_pattern'
-#speckle_pattern = pattern.pattern_generation()
+# adjust for inverting pattern and setting the contrast
+image.visualise_pattern(inverted=False, contrast=1)
 
-# now running the 'speckle_pattern' through to generate the image
-image = ImageGeneration(pattern.pattern_generation(), image_intensity=0.5, inverted=False, contrast=1)
-image.save(filename='speckle_pattern.tiff',bits= 16,save=True)
+# can set the mean intensity of the image
+image.mean_intensity() 
+
+#saving the image
+image.save(filename='speckle_pattern.tiff',bits= 16,save=False)
+
 
 #for the fft
 fft = FFTAnalysis(image.image, image_height, image_width)

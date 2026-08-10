@@ -34,10 +34,9 @@ class OtherPattern:
         self.image_height = image_height
         self.speckle_width = speckle_width
         self.speckle_height = speckle_height
-        self.black_white_balance = black_white_balance
+        self.black_white_balance = 1 - black_white_balance
         self.speckle_number = None
         self.image = None
-
 
     def number_of_dots(self) -> None:
         '''
@@ -49,48 +48,49 @@ class OtherPattern:
         '''
         image_area = (self.image_height*self.image_width)
         speckle_area = (self.speckle_height*self.speckle_width)
-        required_speckle_density = self.black_white_balance
-        self.speckle_number = int(required_speckle_density*(image_area/speckle_area))
+        self.speckle_number = int((self.black_white_balance*image_area/speckle_area))
 
-    def pattern(self) -> np.ndarray:
+    def pattern(self) -> None:
         '''
         Generates the random locations of the centre of the dots and fills any pixels within the dots in 
         Args: 
             None
         Returns: 
-            np.ndarray: speckle pattern
+            none
         '''
+
         x_random = np.random.uniform(0, self.image_width-self.speckle_width+1, size = self.speckle_number)
         y_random = np.random.uniform(0, self.image_height-self.speckle_height+1, size = self.speckle_number)
 
         self.image = np.full((self.image_height, self.image_width), 1.0)
 
         for x, y in zip(x_random.ravel(), y_random.ravel()):
-            x_min = max(0, int(np.floor(x-self.speckle_width-1)))
-            x_max = min(self.image_width, int(np.ceil(x+self.speckle_width+1)))
-            y_min = max(0, int(np.floor(y-self.speckle_height-1)))
-            y_max = min(self.image_height, int(np.ceil(y+self.speckle_height+1)))    
+            x_min = max(0, int(np.floor(x-self.speckle_width+1)))
+            x_max = min(self.image_width, int(np.ceil(x+self.speckle_width-1)))
+            y_min = max(0, int(np.floor(y-self.speckle_height+1)))
+            y_max = min(self.image_height, int(np.ceil(y+self.speckle_height-1)))    
 
             for x in range(x_min, x_max):
                 for y in range(y_min, y_max):
                     self.image[y, x] = 0
 
-        return self.image
-
-    def inverted(self, inverted: bool = False) -> np.ndarray:
+    def invert_contrast(self, inverted: bool = False, contrast: float = 1) -> np.ndarray:
         '''
         Inverts speckle pattern
         Args: 
             inverted (bool): whether to invert the speckle pattern or not
+            contrast (float): contrast of speckle pattern
         Returns:
             np.ndarray: speckle pattern 
         '''
         if inverted:
             self.image = 1 - self.image
 
+        self.image = self.image * contrast
+
         return self.image
 
-    def visualisation(self, filename: str, bits: int, save: bool = True) -> None:
+    def visualisation(self) -> None:
         ''' 
         visualising the speckle pattern
         Args: 
@@ -104,7 +104,18 @@ class OtherPattern:
         plt.xlim(0, self.image_width)
         plt.ylim(0, self.image_height)
         plt.gca().set_aspect('equal')
-        plt.imshow(self.image, cmap = 'gray ')
+        plt.imshow(self.image, cmap = 'gray')
+
+
+    def save(self, bits:int = 256, filename:str = 'alternate_speckle_pattern.tiff',save: bool=False) -> None:
+        '''
+        determines whether of not to save the image,if so, savesto the correct bit depth and under the correct filename
+
+        Args:
+            bits (int): determines the bit depth that file is saved to
+            filename (str): determines what name the file is saved under
+            save (bool): determines whether file is saved
+        '''
 
         if save:
             max_val = (1 << bits)-1
@@ -119,6 +130,5 @@ class OtherPattern:
             tifffile.imwrite(filename, out)
 
         plt.show()
-        return None
 
 

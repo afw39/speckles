@@ -36,8 +36,8 @@ class Pattern:
         self.dot_spacing = None
         self.image = None
 
-        self.dot_spacing = dots_number(image_width, image_height, dot_radius, black_white_balance)
-        self.x_new, self.y_new = displaced_grid(image_width, image_height, self.dot_spacing)
+        self.dot_spacing = dots_number(self.image_width, self.image_height, self.dot_radius, self.black_white_balance)
+        self.x_new, self.y_new = displaced_grid(self.image_width, self.image_height, self.dot_spacing)
 
     def pattern_generation(self) -> np.ndarray:
         '''
@@ -73,4 +73,4 @@ class Pattern:
             grey_scale = grey_scale / samples**2
 
             self.image[y_min:y_max, x_min:x_max] = np.minimum(self.image[y_min:y_max, x_min:x_max], 1-grey_scale)
-            return self.image
+        return self.image

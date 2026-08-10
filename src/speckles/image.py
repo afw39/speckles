@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import tifffile
 from PIL import Image
 
@@ -19,15 +19,15 @@ class ImageGeneration:
     Methods:
         visualise_pattern(inverted: bool, contrast: float): if required, inverts image and sets contrast
         mean_intensity(): changes the image based on the user inputted mean intensity
-        bit_depth_tiff(filename: str, bits: int, save: bool): saves the image with specified bit depth and filename
+        save(filename: str, bits: int, save: bool): saves the image with specified bit depth and filename
 
 
     '''
-    def __init__(self, speckle_pattern: np.ndarray, image_intensity: float, inverted: bool = False, contrast: float = 1):
+    def __init__(self, speckle_pattern: np.ndarray):
         self.image = speckle_pattern
-        self.inverted = inverted
-        self.image_intensity = image_intensity
-        self.contrast = contrast
+        self.inverted = None
+        self.image_intensity = None
+        self.contrast = None
 
     def visualise_pattern(self, inverted: bool = False, contrast: float = 1) -> np.ndarray:
         '''
@@ -43,11 +43,11 @@ class ImageGeneration:
 
         self.image = self.image*contrast
 
-        plt.imshow(self.image.image, cmap = 'gray', vmin = 0, vmax = 1)
+        plt.imshow(self.image, cmap = 'gray', vmin = 0, vmax = 1)
         return self.image
 
 
-    def mean_intensity(self) -> None:
+    def mean_intensity(self, image_intensity) -> None:
         '''
         Allows the user to specify a value for the mean intensity of the image
         Args:
@@ -56,12 +56,9 @@ class ImageGeneration:
             None
         '''
 
-        imagegrey = Image.open('speckle_pattern.tiff').convert('L')
-        data = np.array(imagegrey)
-        mean_intensity = data.mean()
-        #image = cv2.imread('speckle_pattern.tiff', cv2.IMREAD_GRAYSCALE)
-        #image_intensity = np.mean(image)
-        print(f'mean intensity of image is, {mean_intensity}')
+        self.image_intensity = image_intensity
+
+        #now need to adjust the greyscale values of each pixel to match the desired intensity 
 
 
     def save(self, filename: str, bits: int = 8, save: bool = True) -> None:

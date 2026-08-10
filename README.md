@@ -76,6 +76,30 @@ Performs fast fourier transform analysis on the image to determine average speck
 
 #### Attributes
 * `image (np.ndarray)`: the result from the Image Class
-*
+* `visual_fft (bool)`: determines if the fft is visualised
+
+#### Methods
+* `fft_analysis() -> None`: computes the average speckle size using fft analysis
+* `visual_fft(visual_fft) -> None`: plots fft spectrum and displays if user desires along with speckle pattern
 
 ### Other Pattern Class
+
+Generates speckle pattern using alternate method of randomnly filling in rectangles of user specified dimensions
+
+#### Attributes
+* `image_width, image_height (int)`: image dimensions (pixels)
+* `speckle_width, speckleheight (int)`: dimensions of dots on speckle pattern (pixels)
+* `black_white_balance (float)`: proportion of black to white pixels
+* `inverted (bool)`: if True, generates an inverted image
+* `save_path (str)`: where/if file is saved
+* `bits (int)`: how many bits make up the image (8-bit, 10-bit, 12-bit or 16-bit)
+
+#### Methods
+* `number-of_dots() -> None`: calculates the number of speckles required on pattern using the speckle/image dimensions
+* `pattern() -> np.ndarray`: generates the random locations of the centre of the dots and fills any pixels within the dots in
+* `inverted(inverted: bool) -> None`: inverts the speckle pattern if inverted = True
+* `visualisation() -> None`: plots the speckle pattern
+* `save(bits: int, save_path: Path | None = None) -> None`: saves the image to specified bit-depth
+
+
+## Examples

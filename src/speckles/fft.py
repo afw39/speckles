@@ -88,6 +88,5 @@ class FFTAnalysis():
             plt.title('radial fft profile')
             plt.grid(True)
 
-        plt.show()
-        return None    
+        plt.show()  
     

@@ -10,9 +10,9 @@ class OtherPattern:
     Attributes:
         image_width, image_height (int) = image dimensions (pixels)
         speckle_width, speckleheight (int): dimensions of dots on speckle pattern (pixels)
-        black_white_balance (float): proportion of black to white pixels
+        speckle_coverage (float): proportion of black to white pixels
         inverted (bool): if True, generates an inverted image
-        save_path: where/if file is saved
+        save_path (str): where/if file is saved
         bits (int): how many bits make up the image (8-bit, 10-bit, 12-bit or 16-bit)
 
     Methods:

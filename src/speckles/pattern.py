@@ -1,5 +1,5 @@
 import numpy as np
-from .grid import dots_number, displaced_grid
+from .spacing import dots_number, displaced_grid
 
 
 

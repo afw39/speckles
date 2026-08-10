@@ -26,11 +26,56 @@ src/
 |
 |---- speckles/
 |       |---- __init__.py
-|       |---- alternate_pattern.py  #pattern generated from filling random pixels on a white image - uses rectangular speckles
-|       |---- fft.py                #fast fourier transform analysis module, outputs the average speckle size in pixels
-|       |---- pattern.py            #pattern generated from random displacements from uniform grid - uses circular speckles
+|       |---- alternate_pattern.py  # pattern generated from filling random pixels on a white image - uses rectangular speckles
+|       |---- fft.py                # fast fourier transform analysis module, outputs the average speckle size in pixels
+|       |---- image.py              # makes image from the pattern, saves and customises pattern to user specification
+|       |---- pattern.py            # pattern generated from random displacements from uniform grid - uses circular speckles
+|       |---- spacing.py            # grid making functions, determines number of speckles and grid spacing
 |---- examples/
-|       |---- example_scrpit_one.py #runs the pattern in pattern.py and fft.py
-|       |---- example_script_two.py #runs the alternate pattern generation
+|       |---- images                # saves speckle patterns in here
+|               |---- alternate_speckle_pattern.tiff
+|               |---- speckle_pattern.tiff
+|       |---- example_scrpit_one.py # runs the pattern in pattern.py and fft.py
+|       |---- example_script_two.py # runs the alternate pattern generation
 
 ```
+## Key Classes and Methods
+
+### Pattern Class
+
+Generates the speckle pattern from user inputs.
+
+#### Attributes
+* `image_height (int), image_width (int)`: dimensions of image in pixels
+* `dot_radius (float)`: radius of dots used to create speckle pattern
+* `speckle_coverage (float)`: measure of the density of speckles - ratio between black and white pixels
+
+#### Methods
+* `pattern_generation() -> None`: creates the image and fills in dots to create initial speckle pattern
+
+### Image Class
+
+Customises the pattern to create image with user specified porperties
+
+#### Attributes
+* `speckle_pattern (np.ndarray)`: speckle pattern generated in `Pattern` Class
+* `mean_intensity (float)`: desired mean intensity of image as a fraction of bit depth (0-1 scale)
+* `inverted (bool)`: determines whether image inverts or not (black speckles on white background is inverted)
+* `contrast (float)`: desired contrast of the image as a fraction of bit depth (0-1 scale)
+* `bits (int)`: how many bits the image is saved to (can be 8-bit, 10-bit, 12-bit or 16-bit)
+* `save_path (str)`: determines where the image is saved/if it is saved at all
+
+#### Methods
+* `visualise_pattern(inverted: bool, contrast: float) -> None`: if desired, inverts image
+* `mean_intensity() -> np.ndarray`: changes brightness/intensity of image based on user input
+* `save(bits: int, save_path: Path | None = None) -> None`: saves the image with specified bit depth and path
+
+### FFTAnalysis Class
+
+Performs fast fourier transform analysis on the image to determine average speckle size
+
+#### Attributes
+* `image (np.ndarray)`: the result from the Image Class
+*
+
+### Other Pattern Class

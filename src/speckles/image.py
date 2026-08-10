@@ -1,15 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import tifffile
-from PIL import Image
 
 class ImageGeneration:
     '''
     Generates image from speckle pattern
 
     Attributes:
-        pattern (np.ndarray): the speckle pattern generated in pattern.py
-        image_intensity (float): mean intensity of the image
+        speckle_pattern (np.ndarray): the speckle pattern generated in pattern.py
+        mean_intensity (float): mean intsenity of image as fraction of bit depth (0 - 1 scale)
         inverted (bool): set to True to invert greyscale of image
         contrast (float): 0 - 1 measure of contrast of image
         filename (str): name that file is saved under
@@ -18,18 +17,15 @@ class ImageGeneration:
 
     Methods:
         visualise_pattern(inverted: bool, contrast: float): if required, inverts image and sets contrast
-        mean_intensity(): changes the image based on the user inputted mean intensity
+        mean_intensity(): changes brightness of image based on user specified mean intensity 
         save(filename: str, bits: int, save: bool): saves the image with specified bit depth and filename
-
-
     '''
+
     def __init__(self, speckle_pattern: np.ndarray):
         self.image = speckle_pattern
-        self.inverted = None
         self.image_intensity = None
-        self.contrast = None
 
-    def visualise_pattern(self, inverted: bool = False, contrast: float = 1) -> np.ndarray:
+    def visualise_pattern(self, inverted: bool = False, contrast: float = 1) -> None:
         '''
         inverts the image, allows user to specify a contrast for the image
         Args:
@@ -44,22 +40,24 @@ class ImageGeneration:
         self.image = self.image*contrast
 
         plt.imshow(self.image, cmap = 'gray', vmin = 0, vmax = 1)
-        return self.image
 
-
-    def mean_intensity(self, image_intensity) -> None:
+    def mean_intensity(self, mean_intensity: float) -> np.ndarray:
         '''
         Allows the user to specify a value for the mean intensity of the image
         Args:
-        mean (int): the mean intensity of the image
+            image_intensity (float): the mean intensity of the image
         Returns:
             None
         '''
 
-        self.image_intensity = image_intensity
+        self.image_intensity = mean_intensity
+        offset_mean_intensity = self.image_intensity-self.image.mean()
 
-        #now need to adjust the greyscale values of each pixel to match the desired intensity 
+        self.image = self.image + offset_mean_intensity
+        self.image = np.clip(self.image, 0, 1)
+        plt.imshow(self.image, cmap = 'gray', vmin = 0, vmax = 1)
 
+        return self.image
 
     def save(self, filename: str, bits: int = 8, save: bool = True) -> None:
         '''

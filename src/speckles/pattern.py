@@ -10,7 +10,7 @@ class Pattern:
     Attributes
         image_height, image_width (int): image dimensions (pix)
         dot_radius (float): radius of dots on speckle pattern
-        black_white_balance (float): measure of ratio of white pixels to black pixels on pattern
+        speckle_coverage (float): measure of ratio of white pixels to black pixels on pattern
         inverted (bool): determines if image inverts greyscale or not
         contrast (float): the contrast of the image (1.0 for highest, 0 for all black image - no contrast)
         filename (str): name that the pattern is saved under
@@ -26,11 +26,11 @@ class Pattern:
         bit_depth_tiff(filename: str, bits: int, save: bool): saves the image as user requests
     '''
 
-    def __init__(self, image_width: int, image_height: int, dot_radius: float, black_white_balance: float):
+    def __init__(self, image_width: int, image_height: int, dot_radius: float, speckle_coverage: float):
         self.image_width = image_width
         self.image_height = image_height
         self.dot_radius = dot_radius
-        self.black_white_balance = 1-black_white_balance
+        self.black_white_balance = 1-speckle_coverage
         self.x_new = None
         self.y_new = None
         self.dot_spacing = None

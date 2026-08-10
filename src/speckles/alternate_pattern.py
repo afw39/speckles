@@ -29,12 +29,12 @@ class OtherPattern:
             plots the speckle pattern, saves as a user defined filename and bit number. 
     '''
 
-    def __init__(self, image_width: int, image_height: int, speckle_width: float, speckle_height: float, black_white_balance: float=0.5) -> None:
+    def __init__(self, image_width: int, image_height: int, speckle_width: float, speckle_height: float, speckle_coverage: float=0.5) -> None:
         self.image_width = image_width
         self.image_height = image_height
         self.speckle_width = speckle_width
         self.speckle_height = speckle_height
-        self.black_white_balance = 1 - black_white_balance
+        self.black_white_balance = 1 - speckle_coverage
         self.speckle_number = None
         self.image = None
 

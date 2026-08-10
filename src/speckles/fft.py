@@ -18,10 +18,10 @@ class FFTAnalysis():
             plots the fft spectrum to display if user requires
     '''
 
-    def __init__(self, image: np.ndarray, image_height: int, image_width: int):
-        self.image_height = image_height
-        self.image_width = image_width
+    def __init__(self, image: np.ndarray):
         self.image = image
+        self.image_height = None
+        self.image_width = None
         self.average_speckle_size = None
         self.bin_centres = None
         self.radial_mean = None
@@ -90,3 +90,4 @@ class FFTAnalysis():
 
         plt.show()
         return None    
+    

@@ -1,6 +1,6 @@
 from speckles import OtherPattern
 
-pattern = OtherPattern(image_width=1000, image_height=1000, speckle_width=5.5, speckle_height=5.5, black_white_balance=0.6)
+pattern = OtherPattern(image_width=1000, image_height=1000, speckle_width=5.5, speckle_height=5.5, speckle_coverage=0.6)
 pattern.number_of_dots()
 pattern.pattern()
 

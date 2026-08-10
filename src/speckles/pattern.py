@@ -11,19 +11,10 @@ class Pattern:
         image_height, image_width (int): image dimensions (pix)
         dot_radius (float): radius of dots on speckle pattern
         speckle_coverage (float): measure of ratio of white pixels to black pixels on pattern
-        inverted (bool): determines if image inverts greyscale or not
-        contrast (float): the contrast of the image (1.0 for highest, 0 for all black image - no contrast)
-        filename (str): name that the pattern is saved under
-        bits (int): how many bits to encode the saved pattern (8-bit, 10-bit, 12-bit, 16-bit)
-        save (bool): whether the pattern is saved or not
     
     Methods:
-        dots_number(): calculates how many dots required on speckle pattern to achieve correct black_white_balance
-        displaced_grid(): generates random displacements and applies to uniform grid to achieve dot locations
-        image_creation(): creates the image and fills in the dots
-        visualise_pattern(inverted: bool): inverts the image
-        contrast(contrast: float): adjusts the contrast of the image
-        bit_depth_tiff(filename: str, bits: int, save: bool): saves the image as user requests
+        pattern_generation() - > None: 
+            creates the image and fills in the dots
     '''
 
     def __init__(self, image_width: int, image_height: int, dot_radius: float, speckle_coverage: float):

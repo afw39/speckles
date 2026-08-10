@@ -1,6 +1,7 @@
+from pathlib import Path
+from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
-import tifffile
 
 class OtherPattern:
     ''' 
@@ -11,8 +12,7 @@ class OtherPattern:
         speckle_width, speckleheight (int): dimensions of dots on speckle pattern (pixels)
         black_white_balance (float): proportion of black to white pixels
         inverted (bool): if True, generates an inverted image
-        save (bool): if True, saves the pattern as a .tiff
-        filename (str): the name that the pattern is saved as
+        save_path: where/if file is saved
         bits (int): how many bits make up the image (8-bit, 10-bit, 12-bit or 16-bit)
 
     Methods:
@@ -25,8 +25,11 @@ class OtherPattern:
         inverted(inverted: bool) -> None
             inverts the speckle pattern if inverted = True
 
-        visualisation(filename: str, bits: 256, save: bool) -> None:
-            plots the speckle pattern, saves as a user defined filename and bit number. 
+        visualisation() -> None:
+            plots the speckle pattern
+
+        save(bits: int, save_path: Path | None = None) -> None:
+            saves the image to specified bit-depth
     '''
 
     def __init__(self, image_width: int, image_height: int, speckle_width: float, speckle_height: float, speckle_coverage: float=0.5) -> None:
@@ -94,9 +97,7 @@ class OtherPattern:
         ''' 
         visualising the speckle pattern
         Args: 
-            filename (str): name that the pattern gets saved under
-            bits (int): bit depth that the image is saved with
-            save (bool): whether the image is saved or not
+            None
         Returns: 
             None
         '''
@@ -106,29 +107,28 @@ class OtherPattern:
         plt.gca().set_aspect('equal')
         plt.imshow(self.image, cmap = 'gray')
 
-
-    def save(self, bits:int = 256, filename:str = 'alternate_speckle_pattern.tiff',save: bool=False) -> None:
+    def save(self, bits:int = 8, save_path: Path | None = None) -> None:
         '''
-        determines whether of not to save the image,if so, savesto the correct bit depth and under the correct filename
-
+        saves the image as user requests
         Args:
-            bits (int): determines the bit depth that file is saved to
-            filename (str): determines what name the file is saved under
-            save (bool): determines whether file is saved
+            bits (int): number of bits that encode the saved image (8-bit, 10-bit, 12-bit, 16-bit)
+            save_path (str): if left empty then not saved, otherwise will be saved as specified
+        Returns:
+            None
         '''
 
-        if save:
-            max_val = (1 << bits)-1
-            if bits <= 8:
-                dtype = np.uint8
-            else:
-                dtype = np.uint16
+        max_val = (1 << bits)-1
+        if bits <= 8:
+            dtype = np.uint8
+        else:
+            dtype = np.uint16
 
-            out = np.clip(self.image, 0, 1)
-            out = (out*max_val).round().astype(dtype)
-
-            tifffile.imwrite(filename, out)
+        out = np.clip(self.image, 0, 1)
+        out = (out*max_val).round().astype(dtype)
+        
+        if save_path is not None:
+            save_path.parent.mkdir(parents=True, exist_ok=True)
+            print(save_path.resolve())
+            Image.fromarray(out).save(save_path)
 
         plt.show()
-
-

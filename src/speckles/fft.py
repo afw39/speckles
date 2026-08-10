@@ -14,6 +14,7 @@ class FFTAnalysis():
     Methods:
         fft_analysis() -> None:
             computes the average speckle size
+            
         visual_fft(visual_fft) -> None
             plots the fft spectrum to display if user requires
     '''

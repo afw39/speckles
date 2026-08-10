@@ -1,3 +1,4 @@
+from pathlib import Path
 from speckles import Pattern, ImageGeneration, FFTAnalysis
 
 # generate pattern and input parameters
@@ -11,10 +12,10 @@ image.visualise_pattern(inverted=False, contrast=1)
 # can set the mean intensity of the image
 image.mean_intensity(mean_intensity=0.5)
 
-#saving the image
-image.save(filename='speckle_pattern.tiff',bits= 8,save=True)
+# saving the image
+image.save(bits=8, save_path=Path(__file__).parent / 'images' / 'speckle_pattern.tiff')
 
-#for the fft
+# for the fft
 fft = FFTAnalysis(image.image)
 fft.fft_analysis()
 

@@ -1,7 +1,7 @@
 # Python Speckle Generator 
 
 ## Overview
-This is a simple python package for generation of a speckle pattern based on user inputs for variables such as imageheight, imagewidth, speckle_radius, black and white balance. It perfoms fast fourier transform analysis on the generated speckle pattern and determines the average speckle size and gives a visualisation of the pattern. 
+This is a simple python package for generation of a speckle pattern based on user inputs for variables such as imageheight, imagewidth, speckle_radius, black and white balance. The image of the speckle pattern is customisable - able to change the contrast, the mean intensity and whether or not the pattern is black dots on a white background or white dots on a black background. It perfoms fast fourier transform analysis on the generated speckle pattern and determines the average speckle size and gives a visualisation of the pattern if desired.
 
 ## How to install
 clone the repository and install package:
@@ -13,9 +13,10 @@ python3 -m pip install -e
 
 ## Structure of package
 The package has three source code modules for two different ways of generating random speckles:
-* `pattern.py` generates the pattern by plotting a uniform grid of speckles based on the image size and the speckle spacing and displacing each point/speckle by a randomnly generated amount within a range. This allows you to quantify 'how random' the pattern is if you wanted to. Takes inputs for image dimensions, speckle radius, black and white balance for the pattern. 
+* `pattern.py` generates the pattern from a uniform grid based on the image size and the speckle spacing and displacing each point/speckle by a randomnly generated amount within a range. This allows you to quantify 'how random' the pattern is if you wanted to. Takes inputs for image dimensions, dot radius, black and white balance for the pattern. 
 * `fft.py` module for performing the fft analysis of the pattern, takes user inputs for saving/outputting the fourier spectrum. Outputs the average speckle size in pixels
-* `alternate_speckle_generation.py` generates the speckle pattern by simply creating a white image of the dimensions inputted by the user and then randomnly generating points/speckles and changing those pixels to black. The input for black and white balance is treated as a measure of the 'density of speckles' which is used with the image size and speckle size to calculate how many speckles/points need to be generated. There is no fourier analysis in this module.
+* `image.py` generates the speckle image from the speckle pattern - can customise the pattern here: change the contrast, mean intensity and choose whether or not to invert the greyscale of the pattern. 
+* `spacing.py` holds two functions used to calculate the grid spacing and number of speckles needed, also calculates the random displacements of the grid points. 
 
 ```
 .gitignore
@@ -26,7 +27,6 @@ src/
 |
 |---- speckles/
 |       |---- __init__.py
-|       |---- alternate_pattern.py  # pattern generated from filling random pixels on a white image - uses rectangular speckles
 |       |---- fft.py                # fast fourier transform analysis module, outputs the average speckle size in pixels
 |       |---- image.py              # makes image from the pattern, saves and customises pattern to user specification
 |       |---- pattern.py            # pattern generated from random displacements from uniform grid - uses circular speckles
@@ -81,25 +81,6 @@ Performs fast fourier transform analysis on the image to determine average speck
 #### Methods
 * `fft_analysis() -> None`: computes the average speckle size using fft analysis
 * `visual_fft(visual_fft) -> None`: plots fft spectrum and displays if user desires along with speckle pattern
-
-### Other Pattern Class
-
-Generates speckle pattern using alternate method of randomnly filling in rectangles of user specified dimensions
-
-#### Attributes
-* `image_width, image_height (int)`: image dimensions (pixels)
-* `speckle_width, speckleheight (int)`: dimensions of dots on speckle pattern (pixels)
-* `black_white_balance (float)`: proportion of black to white pixels
-* `inverted (bool)`: if True, generates an inverted image
-* `save_path (str)`: where/if file is saved
-* `bits (int)`: how many bits make up the image (8-bit, 10-bit, 12-bit or 16-bit)
-
-#### Methods
-* `number-of_dots() -> None`: calculates the number of speckles required on pattern using the speckle/image dimensions
-* `pattern() -> np.ndarray`: generates the random locations of the centre of the dots and fills any pixels within the dots in
-* `inverted(inverted: bool) -> None`: inverts the speckle pattern if inverted = True
-* `visualisation() -> None`: plots the speckle pattern
-* `save(bits: int, save_path: Path | None = None) -> None`: saves the image to specified bit-depth
 
 
 ## Examples

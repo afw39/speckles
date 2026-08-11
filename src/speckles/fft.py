@@ -1,3 +1,5 @@
+from pathlib import Path
+from PIL import Image
 from scipy.signal import find_peaks
 import numpy as np
 import matplotlib.pyplot as plt
@@ -83,10 +85,11 @@ class FFTAnalysis():
         if visual_fft:
             plt.figure(figsize = (8,4))
             plt.plot(self.bin_centres, np.log1p(self.radial_mean))
-            plt.xlabel('radial frequency')
-            plt.ylabel('mean fft mag')
-            plt.title('radial fft profile')
+            plt.xlabel('radial frequency', fontsize=16)
+            plt.xticks(fontsize=16)
+            plt.yticks(fontsize=16)
+            plt.ylabel('mean fft mag', fontsize=16)
+            plt.title('radial fft profile', fontsize=16)
             plt.grid(True)
 
-        plt.show()  
-    
+        plt.show()

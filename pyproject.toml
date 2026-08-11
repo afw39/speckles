@@ -14,7 +14,9 @@ requires-python = ">=3.12"
 dependencies = [
     "numpy",
     "matplotlib",
-    "scipy"
+    "scipy",
+    "pathlib",
+    "PIL"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",

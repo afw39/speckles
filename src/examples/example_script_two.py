@@ -1,15 +1,24 @@
 from pathlib import Path
-from speckles import OtherPattern
+from speckles import Pattern, ImageGeneration, FFTAnalysis
 
-pattern = OtherPattern(image_width=1000, image_height=1000, speckle_width=5.5, speckle_height=5.5, speckle_coverage=0.6)
-pattern.number_of_dots()
-pattern.pattern()
+# generate pattern and input parameters
+pattern = Pattern(image_width=1000, image_height=1000, dot_radius=4.2, speckle_coverage=0.7)
+speckle_pattern = pattern.pattern_generation()
+image = ImageGeneration(speckle_pattern)
 
-# to invert/set contrast of the pattern
-pattern.invert_contrast(inverted=False, contrast=1)
+# adjust for inverting pattern and setting the contrast
+image.visualise_pattern(inverted=True, contrast=0.6)
 
-# to visualise the pattern
-pattern.visualisation()
+# can set the mean intensity of the image
+image.mean_intensity(mean_intensity=0.8)
 
-# to save the pattern
-pattern.save(bits=8, save_path=Path(__file__).parent / 'images' / 'alternate_speckle_pattern.tiff')
+# saving the image
+image.save(bits=12, save_path=Path(__file__).parent / 'images' / 'speckle_pattern_2.tiff')
+
+# for the fft
+fft = FFTAnalysis(image.image)
+fft.fft_analysis()
+
+# to visualise the fft
+fft.visual_fft(visual_fft=True)
+

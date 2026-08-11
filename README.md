@@ -103,3 +103,31 @@ Generates speckle pattern using alternate method of randomnly filling in rectang
 
 
 ## Examples
+#### example_script_one.py
+
+First example using the speckle generator: 
+
+<img width="1514" height="637" alt="image" src="https://github.com/user-attachments/assets/a9a36e3e-167c-4388-9df7-93b43ffdc46f" />
+
+This example script would output a speckle pattern image of dimensions 1500 x 1000 (pixels), dot radius of 5.5 pixels and a 40% speckle coverage. The image would not be inverted so will have black dots on a white background and a maximum contrast of 1. The mean intensity of the image would be 0.5 and the image would be saved as an 8-bit image in the file 'speckle_pattern_1.tiff' within the images folder in the examples folder. The FFT spectrum would not be shown as `visual_fft` is set to `False`, the fft analysis is still performed and the average speckle size would be printed out. This is what the speckle pattern would look like:
+
+<img width="2402" height="1169" alt="image" src="https://github.com/user-attachments/assets/56f987f0-eddc-40c2-ad52-49fed27c9c64" />
+
+The file that the image is saved as will have no axes and will be saved just as the raw pattern. These parameters give an average speckle size of 20.8 pixels
+
+#### example_script_two.py
+Using the same speckle pattern generator but demonstrating use of different values for parameters.  
+
+<img width="1265" height="653" alt="image" src="https://github.com/user-attachments/assets/d7f6e0c4-3041-4256-acff-645e386233e8" />
+
+This example script will create and output a speckle pattern image of dimensions 1000 x 1000 pixels, dot radius of 4.2 pixels and speckle coverage of 70%. The `inverted` parameter is set to `True` so the pattern will be white dots on a black background with a contrast of 0.6. The pattern is given a mean intensity of 0.8 and the image will be saved as a 12-bit image under the name 'speckle_pattern_2.tiff'. This script will also visualise the fft spectrum as `visual_fft` is set to True. The speckle pattern output is: 
+
+<img width="1808" height="1194" alt="image" src="https://github.com/user-attachments/assets/d94ca098-fe60-495f-a569-44b2255e0d77" />
+
+The fft spectrum that is displayed:
+<img width="2506" height="1201" alt="image" src="https://github.com/user-attachments/assets/b6924756-008c-4007-9d92-907099e9cc04" />
+
+
+
+
+

@@ -103,6 +103,20 @@ Generates speckle pattern using alternate method of randomnly filling in rectang
 
 
 ## Examples
-example_script_one.py
+#### example_script_one.py
 
 <img width="1159" height="643" alt="image" src="https://github.com/user-attachments/assets/f6cb3e29-c6cc-484e-808a-e2a5a67cddc9" />
+
+This example script would output a speckle pattern image of dimensions 1000 x 1000 (pixels), dot radius of 5.5 pixels and a 40% speckle coverage. The image would not be inverted so will have black dots on a white background and a maximum contrast of 1. The mean intensity of the image would be 0.5 and the image would be saved as an 8-bit image in the file 'speckle_pattern.tiff' within the images folder in the examples folder. The FFT spectrum would not be shown as `visual_fft` is set to `False` and the average speckle size would be printed out. This is what the speckle pattern would look like:
+
+<img width="1743" height="1189" alt="image" src="https://github.com/user-attachments/assets/c73da789-717b-4d90-98dc-e6d6229871b3" />
+
+The file that the image is saved as will have no axes and will be saved just as the raw pattern. 
+
+#### example_script_two.py
+This is for using the alternate pattern generation method  
+
+<img width="1537" height="438" alt="image" src="https://github.com/user-attachments/assets/51d34d16-10c4-4b51-9c87-b2394107cc16" />
+
+
+This example script will create and output a speckle pattern image of dimensions 1000 x 1000 pixels, speckle dimensions of 5.5 x 5.5 pixels and speckle coverage of 60%. The `inverted` parameter is set to `True` so the pattern will be white dots on a black background with a contrast of 1. The pattern

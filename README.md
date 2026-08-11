@@ -103,3 +103,6 @@ Generates speckle pattern using alternate method of randomnly filling in rectang
 
 
 ## Examples
+example_script_one.py
+
+<img width="1159" height="643" alt="image" src="https://github.com/user-attachments/assets/f6cb3e29-c6cc-484e-808a-e2a5a67cddc9" />

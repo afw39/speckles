@@ -125,12 +125,7 @@ This example script will create and output a speckle pattern image of dimensions
 <img width="1808" height="1194" alt="image" src="https://github.com/user-attachments/assets/d94ca098-fe60-495f-a569-44b2255e0d77" />
 
 The fft spectrum that is displayed:
-<img width="2522" height="1187" alt="image" src="https://github.com/user-attachments/assets/93aee9b8-0efe-4209-8c6b-6ab4560bd112" />
 
-The average speckle size is also outputted as 19.4 pixels
+<img width="2522" height="1187" alt="image" src="https://github.com/user-attachments/assets/15acb038-2ab7-4122-9326-98a717618250" />
 
-
-
-
-
-
+The average speckle size is also outputted as 20.8 pixels

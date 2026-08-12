@@ -98,16 +98,16 @@ The file that the image is saved as will have no axes and will be saved just as 
 
 #### example_script_two.py
 Using the same speckle pattern generator but demonstrating use of different values for parameters.  
+<img width="1696" height="705" alt="image" src="https://github.com/user-attachments/assets/a935b0d3-015c-49ae-b9e0-0489ee50e5ff" />
 
-<img width="1265" height="653" alt="image" src="https://github.com/user-attachments/assets/d7f6e0c4-3041-4256-acff-645e386233e8" />
+This example script will create and output a speckle pattern image of dimensions 1000 x 1000 pixels, dot radius of 4.2 pixels and speckle coverage of 70%. The `inverted` parameter is set to `True` so the pattern will be white dots on a black background with a contrast of 0.8. The pattern is given a mean intensity of 0.6 and the image will be saved as a 12-bit image under the name 'speckle_pattern_2.tiff'. This script will also visualise the fft spectrum as `visual_fft` is set to True. The speckle pattern output and the saved image file are:
 
-This example script will create and output a speckle pattern image of dimensions 1000 x 1000 pixels, dot radius of 4.2 pixels and speckle coverage of 70%. The `inverted` parameter is set to `True` so the pattern will be white dots on a black background with a contrast of 0.6. The pattern is given a mean intensity of 0.8 and the image will be saved as a 12-bit image under the name 'speckle_pattern_2.tiff'. This script will also visualise the fft spectrum as `visual_fft` is set to True. The speckle pattern output and the saved image file are:
+<img width="1912" height="1192" alt="image" src="https://github.com/user-attachments/assets/6c72484b-7984-4ab9-b0b0-1a29f4738878" />
 
-<img width="1808" height="1194" alt="image" src="https://github.com/user-attachments/assets/d94ca098-fe60-495f-a569-44b2255e0d77" /> 
+<img width="1334" height="1111" alt="image" src="https://github.com/user-attachments/assets/8dde8447-cd73-41e8-9ab1-fd7d7f879048" />
 
 The fft spectrum that is displayed:
 
-<img width="1116" height="617" alt="image" src="https://github.com/user-attachments/assets/8bb6315b-1a55-48d8-8382-6a0f2f950dc5" />
+<img width="2492" height="1186" alt="image" src="https://github.com/user-attachments/assets/34e8c680-f0e9-4ba0-8f2e-4e74835a6d9d" />
 
-
-The average speckle size is also outputted as 20.8 pixels
+The average speckle size is also outputted as 24.5 pixels.

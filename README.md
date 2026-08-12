@@ -35,8 +35,8 @@ src/
 |       |---- images                
 |               |---- alternate_speckle_pattern.tiff
 |               |---- speckle_pattern.tiff
-|       |---- example_scrpit_one.py # runs the pattern in pattern.py and fft.py
-|       |---- example_script_two.py # runs the alternate pattern generation
+|       |---- example_scrpit_one.py       # runs the pattern in pattern.py and fft.py
+|       |---- example_script_two.py       # runs the alternate pattern generation
 
 ```
 ## Key Classes and Methods

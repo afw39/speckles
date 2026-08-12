@@ -1,7 +1,7 @@
 # Python Speckle Generator 
 
 ## Overview
-This is a simple python package for generation of a speckle pattern based on user inputs for variables such as imageheight, imagewidth, speckle_radius, black and white balance. The image of the speckle pattern is customisable - able to change the contrast, the mean intensity and whether or not the pattern is black dots on a white background or white dots on a black background. It perfoms fast fourier transform analysis on the generated speckle pattern and determines the average speckle size and gives a visualisation of the pattern if desired.
+This is a simple python package for generation of a speckle pattern based on user inputs for variables such as image dimensions, dot radius and speckle coverage. The image of the speckle pattern is customisable. The use is able to change the contrast, the mean intensity and whether or not the pattern is black dots on a white background or white dots on a black background. It perfoms fast fourier transform analysis on the generated speckle pattern and determines the average speckle size and gives a visualisation of the pattern if desired.
 
 ## How to install
 clone the repository and install package:
@@ -12,11 +12,11 @@ python3 -m pip install -e
 ```
 
 ## Structure of package
-The package has three source code modules for two different ways of generating random speckles:
-* `pattern.py` generates the pattern from a uniform grid based on the image size and the speckle spacing and displacing each point/speckle by a randomnly generated amount within a range. This allows you to quantify 'how random' the pattern is if you wanted to. Takes inputs for image dimensions, dot radius, black and white balance for the pattern. 
-* `fft.py` module for performing the fft analysis of the pattern, takes user inputs for saving/outputting the fourier spectrum. Outputs the average speckle size in pixels
+The package has four source code modules for creating a speckle pattern image:
+* `pattern.py` generates the pattern from a uniform grid based on the image size and the speckle spacing and displacing each point/speckle by a randomnly generated amount within a range. This allows you to quantify 'how random' the pattern is if you wanted to. Takes inputs for image dimensions, dot radius, speckle coverage for the pattern. 
+* `fft.py` module for performing the fft analysis of the pattern, takes user inputs for saving/outputting the fourier spectrum. Outputs the average speckle size in pixels and the fft spectrum if desired
 * `image.py` generates the speckle image from the speckle pattern - can customise the pattern here: change the contrast, mean intensity and choose whether or not to invert the greyscale of the pattern. 
-* `spacing.py` holds two functions used to calculate the grid spacing and number of speckles needed, also calculates the random displacements of the grid points. 
+* `spacing.py` holds two functions used to calculate the grid spacing/number of speckles needed based on the value taken for speckle coverage, also calculates the random displacements of the grid points. 
 
 ```
 .gitignore
@@ -32,7 +32,7 @@ src/
 |       |---- pattern.py            # pattern generated from random displacements from uniform grid - uses circular speckles
 |       |---- spacing.py            # grid making functions, determines number of speckles and grid spacing
 |---- examples/
-|       |---- images                # saves speckle patterns in here
+|       |---- images                
 |               |---- alternate_speckle_pattern.tiff
 |               |---- speckle_pattern.tiff
 |       |---- example_scrpit_one.py # runs the pattern in pattern.py and fft.py
@@ -53,7 +53,7 @@ Generates the speckle pattern from user inputs.
 #### Methods
 * `pattern_generation() -> None`: creates the image and fills in dots to create initial speckle pattern
 
-### Image Class
+### ImageGeneration Class
 
 Customises the pattern to create image with user specified porperties
 
@@ -101,9 +101,9 @@ Using the same speckle pattern generator but demonstrating use of different valu
 
 <img width="1265" height="653" alt="image" src="https://github.com/user-attachments/assets/d7f6e0c4-3041-4256-acff-645e386233e8" />
 
-This example script will create and output a speckle pattern image of dimensions 1000 x 1000 pixels, dot radius of 4.2 pixels and speckle coverage of 70%. The `inverted` parameter is set to `True` so the pattern will be white dots on a black background with a contrast of 0.6. The pattern is given a mean intensity of 0.8 and the image will be saved as a 12-bit image under the name 'speckle_pattern_2.tiff'. This script will also visualise the fft spectrum as `visual_fft` is set to True. The speckle pattern output is: 
+This example script will create and output a speckle pattern image of dimensions 1000 x 1000 pixels, dot radius of 4.2 pixels and speckle coverage of 70%. The `inverted` parameter is set to `True` so the pattern will be white dots on a black background with a contrast of 0.6. The pattern is given a mean intensity of 0.8 and the image will be saved as a 12-bit image under the name 'speckle_pattern_2.tiff'. This script will also visualise the fft spectrum as `visual_fft` is set to True. The speckle pattern output and the saved image file are:
 
-<img width="1808" height="1194" alt="image" src="https://github.com/user-attachments/assets/d94ca098-fe60-495f-a569-44b2255e0d77" />
+<img width="1808" height="1194" alt="image" src="https://github.com/user-attachments/assets/d94ca098-fe60-495f-a569-44b2255e0d77" /> 
 
 The fft spectrum that is displayed:
 

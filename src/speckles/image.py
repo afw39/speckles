@@ -28,9 +28,8 @@ class ImageGeneration:
 
     def __init__(self, speckle_pattern: np.ndarray):
         self.image = speckle_pattern
-        self.image_intensity = None
 
-    def visualise_pattern(self, inverted: bool = False, contrast: float = 1) -> None:
+    def visualise_pattern(self, inverted: bool = False, contrast: float = 1) -> np.ndarray:
         '''
         inverts the image, allows user to specify a contrast for the image
         Args:
@@ -40,13 +39,14 @@ class ImageGeneration:
         '''
 
         if inverted:
-            self.image = 1 - self.image
+            self.image = 1-self.image
 
-        self.image = self.image*contrast
+        self.image *= contrast
 
-        plt.imshow(self.image, cmap = 'gray', vmin = 0, vmax = 1)
 
-    def mean_intensity(self, mean_intensity: float) -> np.ndarray:
+        return self.image
+
+    def mean_intensity(self, mean_intensity: float) -> None:
         '''
         Allows the user to specify a value for the mean intensity of the image
         Args:
@@ -55,14 +55,14 @@ class ImageGeneration:
             None
         '''
 
-        self.image_intensity = mean_intensity
-        offset_mean_intensity = self.image_intensity-self.image.mean()
+        image_intensity = mean_intensity
+        offset_mean_intensity = (image_intensity-self.image.mean())
 
         self.image = self.image + offset_mean_intensity
-        self.image = np.clip(self.image, 0, 1)
-        plt.imshow(self.image, cmap = 'gray', vmin = 0, vmax = 1)
 
-        return self.image
+        self.image = np.clip(self.image, 0, 1)
+
+        plt.imshow(self.image, cmap = 'gray', vmin = 0, vmax = 1)
 
     def save(self, bits: int = 8, save_path: Path | None = None) -> None:
         '''
@@ -75,13 +75,14 @@ class ImageGeneration:
         '''
 
         max_val = (1 << bits)-1
-        if bits <= 8:
+        if bits == 8:
             dtype = np.uint8
         else:
+            self.image = self.image / 256
+            self.image = self.image * (2**bits)
             dtype = np.uint16
 
-        out = np.clip(self.image, 0, 1)
-        out = (out*max_val).round().astype(dtype)
+        out = (self.image*max_val).round().astype(dtype)
         
         if save_path is not None:
             save_path.parent.mkdir(parents=True, exist_ok=True)

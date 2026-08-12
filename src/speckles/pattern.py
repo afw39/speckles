@@ -45,7 +45,7 @@ class Pattern:
         yy, xx = np.meshgrid(np.arange(self.image_height), np.arange(self.image_width), indexing = 'ij')
 
         for x, y in zip(self.x_new.ravel(), self.y_new.ravel()):
-            x_min = max(0, int(np.floor(x-self.dot_radius-1))) 
+            x_min = max(0, int(np.floor(x-self.dot_radius-1)))
             x_max = min(self.image_width, int(np.ceil(x+self.dot_radius+1)))
             y_min = max(0, int(np.floor(y-self.dot_radius-1)))
             y_max = min(self.image_height, int(np.ceil(y+self.dot_radius+1)))

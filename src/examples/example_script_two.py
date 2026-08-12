@@ -7,18 +7,20 @@ speckle_pattern = pattern.pattern_generation()
 image = ImageGeneration(speckle_pattern)
 
 # adjust for inverting pattern and setting the contrast
-image.visualise_pattern(inverted=True, contrast=0.6)
+image.visualise_pattern(inverted=True, contrast=0.8)
 
 # can set the mean intensity of the image
-image.mean_intensity(mean_intensity=0.8)
+
+# set the mean intensity
+image.mean_intensity(mean_intensity=0.6)
 
 # saving the image
-image.save(bits=12, save_path=Path(__file__).parent / 'images' / 'speckle_pattern_2.tiff')
+image.save(bits=8, save_path=Path(__file__).parent / 'images' / 'speckle_pattern_2.tiff')
 
 # for the fft
 fft = FFTAnalysis(image.image)
 fft.fft_analysis()
 
 # to visualise the fft
-fft.visual_fft(visual_fft=True)
+fft.visual_fft(visual_fft=False)
 

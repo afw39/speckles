@@ -7,10 +7,10 @@ speckle_pattern = pattern.pattern_generation()
 image = ImageGeneration(speckle_pattern)
 
 # adjust for inverting pattern and setting the contrast
-image.visualise_pattern(inverted=False, contrast=1)
+image = image.visualise_pattern(inverted=False, contrast=1)
 
 # can set the mean intensity of the image
-image.mean_intensity(mean_intensity=0.5)
+image = image.mean_intensity(mean_intensity=0.5)
 
 # saving the image
 image.save(bits=8, save_path=Path(__file__).parent / 'images' / 'speckle_pattern_1.tiff')

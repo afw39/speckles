@@ -15,12 +15,12 @@ image.visualise_pattern(inverted=True, contrast=0.8)
 image.mean_intensity(mean_intensity=0.6)
 
 # saving the image
-image.save(bits=8, save_path=Path(__file__).parent / 'images' / 'speckle_pattern_2.tiff')
+image.save(bits=12, save_path=Path(__file__).parent / 'images' / 'speckle_pattern_2.tiff')
 
 # for the fft
 fft = FFTAnalysis(image.image)
 fft.fft_analysis()
 
 # to visualise the fft
-fft.visual_fft(visual_fft=False)
+fft.visual_fft(visual_fft=True)
 

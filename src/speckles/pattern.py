@@ -1,9 +1,11 @@
 import numpy as np
+
 from .spacing import dots_number, displaced_grid
 
 
-
 class Pattern:
+
+
     '''
     Generates speckle pattern
 
@@ -18,6 +20,7 @@ class Pattern:
     '''
 
     def __init__(self, image_width: int, image_height: int, dot_radius: float, speckle_coverage: float):
+
         self.image_width = image_width
         self.image_height = image_height
         self.dot_radius = dot_radius
@@ -31,6 +34,7 @@ class Pattern:
         self.x_new, self.y_new = displaced_grid(self.image_width, self.image_height, self.dot_spacing)
 
     def pattern_generation(self) -> np.ndarray:
+
         '''
         creates the image and fills in the dots
         Args:

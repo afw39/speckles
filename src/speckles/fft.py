@@ -1,10 +1,12 @@
-from pathlib import Path
-from PIL import Image
 from scipy.signal import find_peaks
+
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 class FFTAnalysis():
+
+
     '''
     Class that performs fast fourier transform analysis on the generated speckle pattern to determine the average speckle size of the pattern.
 
@@ -21,6 +23,7 @@ class FFTAnalysis():
     '''
 
     def __init__(self, image: np.ndarray):
+
         self.image = image
         self.image_height = None
         self.image_width = None
@@ -29,6 +32,7 @@ class FFTAnalysis():
         self.radial_mean = None
 
     def fft_analysis(self) -> None:
+
         '''
         computes the average speckle size
         
@@ -73,6 +77,7 @@ class FFTAnalysis():
         print(f'average speckle size of pattern is {self.average_speckle_size:.1f} pixels')
 
     def visual_fft(self, visual_fft: bool = False) -> None:
+
         '''
         for visualising the fft
 

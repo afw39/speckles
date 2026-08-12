@@ -1,9 +1,13 @@
 from pathlib import Path
 from PIL import Image
+
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 class ImageGeneration:
+
+
     '''
     Generates image from speckle pattern
 
@@ -27,9 +31,11 @@ class ImageGeneration:
     '''
 
     def __init__(self, speckle_pattern: np.ndarray):
+
         self.image = speckle_pattern
 
     def visualise_pattern(self, inverted: bool = False, contrast: float = 1) -> np.ndarray:
+
         '''
         inverts the image, allows user to specify a contrast for the image
         Args:
@@ -47,6 +53,7 @@ class ImageGeneration:
         return self.image
 
     def mean_intensity(self, mean_intensity: float) -> None:
+
         '''
         Allows the user to specify a value for the mean intensity of the image
         Args:
@@ -65,6 +72,7 @@ class ImageGeneration:
         plt.imshow(self.image, cmap = 'gray', vmin = 0, vmax = 1)
 
     def save(self, bits: int = 8, save_path: Path | None = None) -> None:
+
         '''
         saves the image as user requests
         Args:

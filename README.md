@@ -29,7 +29,7 @@ src/
 |       |---- __init__.py
 |       |---- fft.py            # fast fourier transform analysis module, outputs the average speckle size in pixels
 |       |---- image.py          # makes image from the pattern, saves and customises pattern to user specification
-|       |---- pattern.py        # pattern generated from random displacements from uniform grid - uses circular speckles
+|       |---- pattern.py        # pattern generated from random displacements from uniform grid
 |       |---- spacing.py        # grid making functions, determines number of speckles and grid spacing
 |---- examples/
 |       |---- images                

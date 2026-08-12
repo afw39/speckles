@@ -98,16 +98,16 @@ The file that the image is saved as will have no axes and will be saved just as 
 
 #### example_script_two.py
 Using the same speckle pattern generator but demonstrating use of different values for parameters.  
+<img width="1696" height="705" alt="image" src="https://github.com/user-attachments/assets/a935b0d3-015c-49ae-b9e0-0489ee50e5ff" />
 
-<img width="1265" height="653" alt="image" src="https://github.com/user-attachments/assets/d7f6e0c4-3041-4256-acff-645e386233e8" />
+This example script will create and output a speckle pattern image of dimensions 1000 x 1000 pixels, dot radius of 4.2 pixels and speckle coverage of 70%. The `inverted` parameter is set to `True` so the pattern will be white dots on a black background with a contrast of 0.8. The pattern is given a mean intensity of 0.6 and the image will be saved as a 12-bit image under the name 'speckle_pattern_2.tiff'. This script will also visualise the fft spectrum as `visual_fft` is set to True. The speckle pattern is outputted as before (in example 1) and the image will be saved as the raw data:
 
-This example script will create and output a speckle pattern image of dimensions 1000 x 1000 pixels, dot radius of 4.2 pixels and speckle coverage of 70%. The `inverted` parameter is set to `True` so the pattern will be white dots on a black background with a contrast of 0.6. The pattern is given a mean intensity of 0.8 and the image will be saved as a 12-bit image under the name 'speckle_pattern_2.tiff'. This script will also visualise the fft spectrum as `visual_fft` is set to True. The speckle pattern output and the saved image file are:
-
-<img width="1808" height="1194" alt="image" src="https://github.com/user-attachments/assets/d94ca098-fe60-495f-a569-44b2255e0d77" /> 
-
-The fft spectrum that is displayed:
-
-<img width="1116" height="617" alt="image" src="https://github.com/user-attachments/assets/8bb6315b-1a55-48d8-8382-6a0f2f950dc5" />
+<img width="2399" height="1031" alt="image" src="https://github.com/user-attachments/assets/b30f8b42-97e3-4c92-bde5-889a0aa48f1e" />
 
 
-The average speckle size is also outputted as 20.8 pixels
+##### Fourier result
+The fft spectrum is displayed as well: 
+
+<img width="2400" height="1000" alt="image" src="https://github.com/user-attachments/assets/7f020fdf-4704-499b-9f28-614b10d0ce80" />
+
+The average speckle size is also outputted as 19.4 pixels.

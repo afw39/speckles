@@ -102,7 +102,8 @@ Using the same speckle pattern generator but demonstrating use of different valu
 
 This example script will create and output a speckle pattern image of dimensions 1000 x 1000 pixels, dot radius of 4.2 pixels and speckle coverage of 70%. The `inverted` parameter is set to `True` so the pattern will be white dots on a black background with a contrast of 0.8. The pattern is given a mean intensity of 0.6 and the image will be saved as a 12-bit image under the name 'speckle_pattern_2.tiff'. This script will also visualise the fft spectrum as `visual_fft` is set to True. The speckle pattern output is:
 
-<img width="639" height="479" alt="Figure_1" src="https://github.com/user-attachments/assets/e3edc142-c463-423d-904b-97aa500a019c" />
+[Figure_1.tif](https://github.com/user-attachments/files/30977635/Figure_1.tif)
+
 
     
 ##### Fourier result

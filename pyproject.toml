@@ -16,7 +16,7 @@ dependencies = [
     "matplotlib",
     "scipy",
     "pathlib",
-    "PIL"
+    "Pillow"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",

@@ -20,7 +20,7 @@ fft = FFTAnalysis(image.image)
 fft.fft_analysis()
 
 # to visualise the fft
-fft.visual_fft(visual_fft=True)
+fft.visual_fft(visual_fft=False)
 
 
 

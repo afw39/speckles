@@ -10,6 +10,10 @@ git clone <repository-url>
 cd speckles
 pip install .
 ```
+to install from PyPi:
+```
+pip install speckles-afw39
+```
 
 ## Structure of package
 The package has four source code modules for creating a speckle pattern image:

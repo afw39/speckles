@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name  = "speckles-afw39"
-version = "0.1.10"
+version = "0.1.13"
 description = "Random speckle generator in python"
 authors = [
     {name = "afw39", email = "aoife.willis@ukaea.uk"}
@@ -14,7 +14,9 @@ requires-python = ">=3.12"
 dependencies = [
     "numpy",
     "matplotlib",
-    "scipy"
+    "scipy",
+    "pathlib",
+    "Pillow"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",

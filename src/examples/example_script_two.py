@@ -1,28 +1,26 @@
-from speckles import alternate_pattern_generation
+from pathlib import Path
+from speckles import Pattern, ImageGeneration, FFTAnalysis
 
+# generate pattern and input parameters
+pattern = Pattern(image_width=1000, image_height=1000, dot_radius=4.2, speckle_coverage=0.7)
+speckle_pattern = pattern.pattern_generation()
+image = ImageGeneration(speckle_pattern)
 
-def main():
-    '''
-    Alternate speckle generator: generates speckle pattern using rectangles. Does not generate points from a random displacement from a grid but just fills in random pixels on the image. 
-    - imageheight (int) = dimension of the image in pixels
-    - imagewidth (int) = dimension of the image in pixels
-    - speckleheight (int) = height of rectangle on speckle pattern in pixels
-    - specklewidth (int) = width of rectangle on speckle pattern in pixels
-    - bwbalance (float) = ratio of black pixels to white pixels (~density of black pixels) between 0.0 and 1.0 (1.0 is most black, 0 is all white pixels)
-    - save (bool) = determines if speckle patten is saved or not (saved in lossless format of a tiff) 
-    '''
+# adjust for inverting pattern and setting the contrast
+image.visualise_pattern(inverted=True, contrast=0.8)
 
-    #inputs
-    imageheight = 1000
-    imagewidth = 1000
-    speckleheight = 10
-    specklewidth = 10
-    bwbalance = 0.7
-    save = True
-    inverted = False
+# can set the mean intensity of the image
 
-    alternate_pattern_generation(imagewidth, imageheight, specklewidth, speckleheight, bwbalance, save, inverted)
-    
+# set the mean intensity
+image.mean_intensity(mean_intensity=0.6)
 
-if __name__ == '__main__':
-    main()
+# saving the image
+image.save(bits=12, save_path=Path(__file__).parent / 'images' / 'speckle_pattern_2.tiff')
+
+# for the fft
+fft = FFTAnalysis(image.image)
+fft.fft_analysis()
+
+# to visualise the fft
+fft.visual_fft(visual_fft=True)
+

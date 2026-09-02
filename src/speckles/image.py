@@ -1,0 +1,98 @@
+from pathlib import Path
+from PIL import Image
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+class ImageGeneration:
+
+
+    '''
+    Generates image from speckle pattern
+
+    Attributes:
+        speckle_pattern (np.ndarray): the speckle pattern generated in pattern.py
+        mean_intensity (float): mean intsenity of image as fraction of bit depth (0 - 1 scale)
+        inverted (bool): set to True to invert greyscale of image
+        contrast (float): 0 - 1 measure of contrast of image
+        bits (int): how many bits encode image that is saved
+        save_path (str): where image is saved if at all
+
+    Methods:
+        visualise_pattern(inverted: bool, contrast: float) -> None:
+            if required, inverts image and sets contrast
+
+        mean_intensity() -> np.ndarray:
+            changes brightness of image based on user specified mean intensity 
+
+        save(bits: int, save_path: Path | None = None) -> None:
+            saves the image with specified bit depth and path
+    '''
+
+    def __init__(self, speckle_pattern: np.ndarray):
+
+        self.image = speckle_pattern
+
+    def visualise_pattern(self, inverted: bool = False, contrast: float = 1) -> np.ndarray:
+
+        '''
+        inverts the image, allows user to specify a contrast for the image
+        Args:
+            inverted (bool): if True, greyscale values for whole image invert, contrast (float): between 0 and 1 for the contrast of image (1 is high contrast)
+        Returns:
+            np.ndarray: speckle pattern
+        '''
+
+        if inverted:
+            self.image = 1-self.image
+
+        self.image *= contrast
+
+
+        return self.image
+
+    def mean_intensity(self, mean_intensity: float) -> None:
+
+        '''
+        Allows the user to specify a value for the mean intensity of the image
+        Args:
+            image_intensity (float): the mean intensity of the image
+        Returns:
+            None
+        '''
+
+        image_intensity = mean_intensity
+        offset_mean_intensity = (image_intensity-self.image.mean())
+
+        self.image = self.image + offset_mean_intensity
+
+        self.image = np.clip(self.image, 0, 1)
+
+        plt.imshow(self.image, cmap = 'gray', vmin = 0, vmax = 1)
+
+    def save(self, bits: int = 8, save_path: Path | None = None) -> None:
+
+        '''
+        saves the image as user requests
+        Args:
+            bits (int): number of bits that encode the saved image (8-bit, 10-bit, 12-bit, 16-bit)
+            save_path (str): if left empty then not saved, otherwise will be saved as specified
+        Returns:
+            None
+        '''
+
+        max_val = (1 << bits)-1
+        if bits == 8:
+            dtype = np.uint8
+        else:
+            self.image = self.image / 256
+            self.image = self.image * (2**bits)
+            dtype = np.uint16
+
+        out = (self.image*max_val).round().astype(dtype)
+        
+        if save_path is not None:
+            save_path.parent.mkdir(parents=True, exist_ok=True)
+            print(save_path.resolve())
+            Image.fromarray(out).save(save_path)

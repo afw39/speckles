@@ -1,91 +1,71 @@
-#imports
 import numpy as np
-import matplotlib.pyplot as plt
 
-#pattern generation
-def generate_pattern(imagewidth, imageheight, dot_radius, blackwhite, grid, save, inverted):
+from .spacing import dots_number, displaced_grid
+
+
+class Pattern:
+
+
     '''
-    Function that generates a random speckle pattern based on random displacements from a uniform grid. Displaces midpoints of speckles and fills in any pixels within that radius. 
+    Generates speckle pattern
 
-    Parameters:
-    - imagewidth, imageheight (int) = image dimensions (pixels)
-    - dot_radius (int) = radius of dots on speckle pattern (pixels)
-    - blackwhite (float) = proportion of black:white pixels (0.0 is completely white, 1.0 is completely black)
-    - grid (bool) = set to True to see original grid printed over the speckle pattern (not very useful to see so set to False)
-    - save (bool) = set to True to save the pattern as a .tiff
-    - inverted (bool) = set to True to invert the greyscale (have white dots on a black background)
+    Attributes
+        image_height, image_width (int): image dimensions (pix)
+        dot_radius (float): radius of dots on speckle pattern
+        speckle_coverage (float): measure of ratio of white pixels to black pixels on pattern
     
+    Methods:
+        pattern_generation() - > None: 
+            creates the image and fills in the dots
     '''
-    print(f"generating {imagewidth} x {imageheight}")
-    imagesize = imagewidth * imageheight
-    dot_size = np.pi * (dot_radius**2)
-    
-    #calculating speckle spacing/grid sizing
-    number_of_dots = imagesize * blackwhite / dot_size
-    dot_spacing = np.sqrt(imagesize / number_of_dots)
 
-    #making my grid
-    x_coords = np.arange(0, imagewidth, dot_spacing)
-    y_coords = np.arange(0, imageheight, dot_spacing)
-    X, Y = np.meshgrid(x_coords, y_coords)
-    if grid:
-        plt.scatter(X,Y)
+    def __init__(self, image_width: int, image_height: int, dot_radius: float, speckle_coverage: float):
 
-    #rounding my spacing to integer
-    dot_spacing = int(round(dot_spacing))
-    
-    #generating random displacements
-    x_disp = np.random.randint((-1 * dot_spacing // 2),(dot_spacing // 2), size = X.shape)
-    y_disp = np.random.randint((-1 * dot_spacing // 2),(dot_spacing // 2), size = Y.shape)
-    
-    #adding my random displacements to each grid point
-    x_new = X + x_disp 
-    y_new = Y + y_disp
+        self.image_width = image_width
+        self.image_height = image_height
+        self.dot_radius = dot_radius
+        self.black_white_balance = 1-speckle_coverage
+        self.x_new = None
+        self.y_new = None
+        self.dot_spacing = None
+        self.image = None
 
-    #creating image of image dimensions with only white pixels
-    image = np.full((imageheight, imagewidth), 1.0)
-    # splitting each pixel into 16 - 4x4 subpixels
-    samples = 4
-    offsets = (np.arange(samples) + 0.5) / samples - 0.5
+        self.dot_spacing = dots_number(self.image_width, self.image_height, self.dot_radius, self.black_white_balance)
+        self.x_new, self.y_new = displaced_grid(self.image_width, self.image_height, self.dot_spacing)
 
-    #making sub-grid
-    yy, xx = np.meshgrid(np.arange(imageheight),np.arange(imagewidth),indexing = 'ij')
+    def pattern_generation(self) -> np.ndarray:
 
-    #for every single dot, checking what pixels fall within the dot radius and to what extent
-    for x, y in zip(x_new.ravel(), y_new.ravel()):
+        '''
+        creates the image and fills in the dots
+        Args:
+            None
+        Returns:
+            None
+        '''
+        print(f'generating {self.image_width} x {self.image_height}')
+        self.image = np.full((self.image_height, self.image_width), 1.0)
+        samples = 8
+        offsets = (np.arange(samples)+0.5)/samples-0.5
+        yy, xx = np.meshgrid(np.arange(self.image_height), np.arange(self.image_width), indexing = 'ij')
 
-        #setting up an area in the immediate vacinity of each dot for searching
-        xmin = max(0, int(np.floor(x - dot_radius -1))) 
-        xmax = min(imagewidth, int(np.ceil(x + dot_radius + 1)))
-        ymin = max(0, int(np.floor(y - dot_radius -1)))
-        ymax = min(imageheight, int(np.ceil(y + dot_radius + 1)))
+        for x, y in zip(self.x_new.ravel(), self.y_new.ravel()):
+            x_min = max(0, int(np.floor(x-self.dot_radius-1)))
+            x_max = min(self.image_width, int(np.ceil(x+self.dot_radius+1)))
+            y_min = max(0, int(np.floor(y-self.dot_radius-1)))
+            y_max = min(self.image_height, int(np.ceil(y+self.dot_radius+1)))
 
-        #classfiying search area for each direction
-        search_x = xx[ymin:ymax, xmin:xmax]
-        search_y = yy[ymin:ymax, xmin:xmax]
+            search_x = xx[y_min:y_max, x_min:x_max]
+            search_y = yy[y_min:y_max, x_min:x_max]
 
-        #making an array full of zeroes to then store coverage/greyscale values in
-        coverage = np.zeros_like(search_x, dtype = float)
+            grey_scale = np.zeros_like(search_x, dtype = float)
 
-        #iterating over each subpixel increment
-        for dx in offsets:
-            for dy in offsets:
-                #setting dist2 to within the search radius
-                dist2 = ((search_x + dx)-x)**2 + ((search_y + dy)-y)**2
-                #making a new variable for if the distance within the search radius is within the dot radius
-                inside_radius = dist2 <= dot_radius**2
-                coverage = coverage + inside_radius
-        coverage = coverage / samples**2
+            for dx in offsets:
+                for dy in offsets:
+                    searching_distance = ((search_x+dx)-x)**2 + ((search_y+dy)-y)**2
+                    inside_radius = searching_distance <= self.dot_radius**2
+                    grey_scale = grey_scale+inside_radius
 
-        #need it to be greyscale proportional to how much pixel is being covered
-        image[ymin:ymax, xmin:xmax] = np.minimum(image[ymin:ymax, xmin:xmax], 1 - coverage)
+            grey_scale = grey_scale / samples**2
 
-    #flipping every pixel greyscale for the inverted image
-    if inverted is True:
-        image = 1 - image
-    #plotting the image
-    plt.imshow(image, cmap = 'gray', vmin = 0, vmax = 1)
-    if save:
-        plt.savefig('new_speckle_pattern.tiff')
-    plt.show()
-    return image
+            self.image[y_min:y_max, x_min:x_max] = np.minimum(self.image[y_min:y_max, x_min:x_max], 1-grey_scale)
+        return self.image

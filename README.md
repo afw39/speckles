@@ -36,9 +36,6 @@ src/
 |       |---- pattern.py        # pattern generated from random displacements from uniform grid
 |       |---- spacing.py        # grid making functions, determines number of speckles and grid spacing
 |---- examples/
-|       |---- images                
-|               |---- alternate_speckle_pattern.tiff
-|               |---- speckle_pattern.tiff
 |       |---- example_scrpit_one.py       # runs the pattern in pattern.py and fft.py
 |       |---- example_script_two.py       # runs the alternate pattern generation
 
